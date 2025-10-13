@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weź Się Do Roboty</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
+    <style>
+        /* --- Zmienne Kolorów --- */
+        :root {
+            --bg-light: #FDF6F6;
+            --bg-dark: #2C2C3E;
+            --text-light: #333;
+            --text-dark: #f0f0f0;
+            --noise-light: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            --noise-dark: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+
+            --c-red: #ff8a80;
+            --c-orange: #ffca80;
+            --c-yellow: #ffd700;
+            --c-green: #c8e6c9;
+            --c-mint: #a7ffeb;
+            --c-lavender: #e1bee7;
+            --c-peach: #ffccbc;
+            --c-pink: #f8bbd0;
+            --c-blue: #b3e5fc;
+            
+            --c-red-dark: #c62828;
+            --c-yellow-dark: #f9a825;
+            --c-green-dark: #2e7d32;
+
+            --card-bg-light: rgba(255, 255, 255, 0.7);
+            --card-bg-dark: rgba(50, 50, 70, 0.7);
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --transition: all 0.5s ease;
+        }
+
+        /* --- Podstawowe Style --- */
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Zapobiega scrollowaniu całej strony */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: var(--noise-light);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+            transition: var(--transition);
+        }
+
+        /* --- Tryb Ciemny --- */
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        body.dark-mode::after {
+            background-image: var(--noise-dark);
+            opacity: 0.08;
+        }
+        body.dark-mode .card { background-color: var(--card-bg-dark); }
+        body.dark-mode .nav-bar { background-color: #383854; border-top: 1px solid #4a4a6a;}
+        body.dark-mode .nav-button.active { color: var(--c-mint); }
+        body.dark-mode .modal-content { background-color: #383854; }
+
+        /* --- Nagłówek --- */
+        header {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .app-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--c-lavender), var(--c-peach), var(--c-mint));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .header-actions button {
+            background: none; border: none; font-size: 1.5rem; cursor: pointer; color: inherit;
+        }
+
+        /* --- Główna zawartość --- */
+        main {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 1.5rem 80px 1.5rem; /* Padding na dole na nawigację */
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- Karty --- */
+        .card {
+            background: var(--card-bg-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .card-title {
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- Dolna Nawigacja --- */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            font-size: 0.65rem; /* Zmniejszona czcionka dla 8 przycisków */
+            transition: color 0.3s ease;
+            flex-grow: 1;
+        }
+        .nav-button .icon { font-size: 1.3rem; }
+        .nav-button.active { color: var(--c-peach); }
+        .nav-button:hover { color: var(--c-lavender); }
+
+        /* --- Modale --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        .modal.visible .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { margin-top: 0; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+
+        /* --- Formularze --- */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500;}
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            font-family: inherit;
+        }
+        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+        .form-actions button {
+            background: none; border: none; font-size: 2rem; cursor: pointer;
+        }
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; }
+        
+        /* --- Macierz Eisenhowera --- */
+        #eisenhower-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            min-height: 500px;
+        }
+        .quadrant {
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 2px dashed rgba(0,0,0,0.1);
+        }
+        .quadrant-title { font-weight: 600; margin-top: 0; }
+        #q1 { background-color: rgba(255, 138, 128, 0.2); border-color: var(--c-red); }
+        #q2 { background-color: rgba(255, 202, 128, 0.2); border-color: var(--c-orange); }
+        #q3 { background-color: rgba(255, 215, 0, 0.2); border-color: var(--c-yellow); }
+        #q4 { background-color: rgba(200, 230, 201, 0.2); border-color: var(--c-green); }
+
+        .task {
+            background: var(--card-bg-light);
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task.delegated {
+            opacity: 0.8;
+            border-left: 4px solid var(--c-blue);
+        }
+        .task.dragging { opacity: 0.5; }
+        .task-actions button { background: none; border: none; cursor: pointer; opacity: 0.5; }
+        .task-actions button:hover { opacity: 1; }
+        
+        /* --- Inne komponenty --- */
+        #payments-list .payment-item, #ideas-list .idea-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .payment-status {
+            display: inline-block;
+            padding: 0.3em 0.8em;
+            border-radius: 1em;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #fff;
+            margin-left: 10px;
+        }
+        .status-paid { background-color: var(--c-green-dark); }
+        .status-overdue { background-color: var(--c-red-dark); }
+        .status-approaching { background-color: var(--c-yellow-dark); color: #333;}
+        .status-pending { background-color: #90a4ae; }
+
+        .person-label {
+            display: inline-block;
+            padding: 0.3em 0.8em;
+            border-radius: 1em;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .person-Zosia { background-color: #f8bbd0; color: #5c2334; }
+        .person-Tymek { background-color: #b3e5fc; color: #013a5c; }
+        .person-Karolina { background-color: #e1bee7; color: #3d2247; }
+        .person-Tomek { background-color: #c8e6c9; color: #254a26; }
+
+        #priority-card {
+            background: linear-gradient(135deg, var(--c-peach), var(--c-lavender));
+            color: #3d2247;
+            transform: scale(1.02); /* Make it slightly bigger */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        #priority-card .card-title {
+            font-size: 1.5rem; /* Bigger title */
+        }
+
+        body.dark-mode #priority-card {
+            background: linear-gradient(135deg, #4a4a6a, #383854);
+            color: var(--text-dark);
+            border: 1px solid var(--c-mint);
+        }
+
+        #daily-priorities p {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Sekcja Zdrowia - Nowe Style */
+        #health-list h3 { /* Nagłówki dat */
+            margin-top: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            color: var(--c-peach);
+        }
+        body.dark-mode #health-list h3 {
+            border-bottom-color: rgba(255,255,255,0.1);
+            color: var(--c-mint);
+        }
+        .health-item {
+            background: rgba(0,0,0,0.02);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        body.dark-mode .health-item { background: rgba(255,255,255,0.05); }
+        .health-content { flex-grow: 1; }
+        .health-item .appointment-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        body.dark-mode .health-item .appointment-details { border-bottom-color: rgba(255,255,255,0.1); }
+        .health-item .appointment-info {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .health-item .mood-details { font-weight: 500; }
+        .health-item .health-notes {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        body.dark-mode .health-item .health-notes { color: #ccc; }
+
+
+        .btn {
+            background: var(--c-peach);
+            color: var(--text-light);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        
+        #qr-code-container { text-align: center; margin-top: 1rem; }
+
+        /* --- NOWE KOMPONENTY --- */
+        #focus-modal .modal-content { text-align: center; }
+        #focus-timer { font-size: 5rem; font-weight: 700; margin: 2rem 0; }
+        
+        #wins-list li { margin-bottom: 0.5rem; }
+        #add-win-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        #add-win-form input { flex-grow: 1; }
+        #add-win-form button { padding: 0.8rem; border-radius: 0.5rem; background-color: var(--c-peach); }
+        
+        #meals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .meal-day-card { background-color: rgba(0,0,0,0.02); padding: 1rem; border-radius: 0.5rem; }
+        .meal-day-card h4 { margin-top: 0; }
+        .meal-day-card input { margin-bottom: 0.5rem; }
+
+        .habit-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 0.5rem; margin-bottom: 0.5rem; }
+        .habit-item label { font-weight: 500; }
+        .habit-item input[type="checkbox"] { width: 20px; height: 20px; }
+
+
+        /* --- Responsywność --- */
+        @media (max-width: 768px) {
+            .app-title { font-size: 1.5rem; }
+            main { padding: 0 1rem 80px 1rem; }
+            #eisenhower-matrix { grid-template-columns: 1fr; }
+            .nav-button .label { display: none; } /* Ukryj tekst na małych ekranach */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="app-title">Wizjonerka</h1>
+        <div class="header-actions">
+            <button id="focus-btn" title="Tryb Skupienia">🎯</button>
+            <button id="theme-toggle" title="Zmień motyw">🌙</button>
+            <button id="sync-button" title="Synchronizuj">🔄</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Strona: Pulpit -->
+        <section id="pulpit" class="page active">
+            <div class="grid-container">
+                <div class="card" id="priority-card">
+                    <h2 class="card-title">⭐ Priorytety na dziś</h2>
+                    <div id="daily-priorities"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🏆 Dzisiejsze Zwycięstwa</h2>
+                    <ul id="wins-list"></ul>
+                    <form id="add-win-form">
+                        <input type="text" id="win-input" placeholder="Co Ci się dziś udało?" required>
+                        <button type="submit">➕</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">💡 Motto na dziś</h2>
+                    <p id="daily-motto"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🎯 Cele Strategiczne i Operacyjne</h2>
+                    <p id="strategic-goals"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">📈 Wzrost Sklepu i Marketing</h2>
+                    <p id="kpi-goals"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">💖 Przyjemność dla mnie</h2>
+                    <p id="self-care-idea"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🧹 Motywator sprzątania</h2>
+                    <p id="cleaning-motivator"></p>
+                </div>
+                 <div class="card">
+                    <h2 class="card-title">⏰ Pilne płatności (2 dni)</h2>
+                    <div id="urgent-payments"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🩺 Nadchodzące wizyty (2 dni)</h2>
+                    <div id="upcoming-appointments"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strona: Zadania -->
+        <section id="zadania" class="page">
+            <div id="eisenhower-matrix">
+                <div class="quadrant" id="q1" data-quadrant="1">
+                    <h3 class="quadrant-title">🔴 Pilne i Ważne</h3>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="q2" data-quadrant="2">
+                    <h3 class="quadrant-title">🟠 Ważne, niepilne</h3>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="q3" data-quadrant="3">
+                    <h3 class="quadrant-title">🟡 Pilne, nieważne</h3>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="q4" data-quadrant="4">
+                    <h3 class="quadrant-title">⚪ Ani pilne, ani ważne</h3>
+                    <div class="task-list"></div>
+                </div>
+            </div>
+            <button id="add-task-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Zadanie</button>
+        </section>
+
+        <!-- Strona: Płatności -->
+        <section id="platnosci" class="page">
+             <div class="card">
+                <h2 class="card-title">Twoje płatności</h2>
+                <div id="payments-list"></div>
+            </div>
+            <button id="add-payment-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Płatność</button>
+        </section>
+
+        <!-- Strona: Zdrowie -->
+        <section id="zdrowie" class="page">
+             <div class="card">
+                <h2 class="card-title">Monitor Zdrowia</h2>
+                <div id="health-list"></div>
+            </div>
+            <button id="add-health-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Wpis</button>
+        </section>
+        
+        <!-- NOWA Strona: Posiłki -->
+        <section id="posilki" class="page">
+            <div class="card">
+                <h2 class="card-title">📅 Planer Posiłków</h2>
+                <div id="meals-grid"></div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">🛒 Lista Zakupów</h2>
+                <textarea id="shopping-list" rows="10" placeholder="Wpisz tutaj produkty..."></textarea>
+            </div>
+        </section>
+        
+        <!-- NOWA Strona: Nawyki -->
+        <section id="nawyki" class="page">
+            <div class="card">
+                <h2 class="card-title">💪 Monitor Nawyków</h2>
+                <div id="habits-list"></div>
+            </div>
+            <button id="add-habit-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Nawyk</button>
+        </section>
+
+        <!-- Strona: Pomysły -->
+        <section id="pomysly" class="page">
+             <div class="card">
+                <h2 class="card-title">Twoje pomysły</h2>
+                <div id="ideas-list"></div>
+            </div>
+            <button id="add-idea-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">💡 Szybki pomysł</button>
+        </section>
+
+        <!-- Strona: Rozwój -->
+        <section id="rozwoj" class="page">
+            <div class="card">
+                <h2 class="card-title">Asystent Celów</h2>
+                <div class="form-group">
+                    <label for="goal-input">Wpisz swój cel, a ja go rozbiję na kroki:</label>
+                    <input type="text" id="goal-input" placeholder="np. Chcę rozwinąć sprzedaż">
+                </div>
+                <button id="generate-steps-btn" class="btn">Generuj Kroki</button>
+                <div id="goal-steps-output" style="margin-top: 1.5rem;"></div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Edytor Bazy Pomysłów</h2>
+                <p>Dodaj własne pomysły, które będą używane w generatorach.</p>
+                <div class="form-group">
+                    <textarea id="custom-ideas-editor" rows="5"></textarea>
+                </div>
+                <button id="save-custom-ideas-btn" class="btn">Zapisz pomysły</button>
+            </div>
+        </section>
+    </main>
+
+    <nav class="nav-bar">
+        <button class="nav-button active" data-page="pulpit"><span class="icon">🏠</span><span class="label">Pulpit</span></button>
+        <button class="nav-button" data-page="zadania"><span class="icon">✅</span><span class="label">Zadania</span></button>
+        <button class="nav-button" data-page="platnosci"><span class="icon">💰</span><span class="label">Płatności</span></button>
+        <button class="nav-button" data-page="zdrowie"><span class="icon">❤️</span><span class="label">Zdrowie</span></button>
+        <button class="nav-button" data-page="posilki"><span class="icon">🍴</span><span class="label">Posiłki</span></button>
+        <button class="nav-button" data-page="nawyki"><span class="icon">💪</span><span class="label">Nawyki</span></button>
+        <button class="nav-button" data-page="pomysly"><span class="icon">💡</span><span class="label">Pomysły</span></button>
+        <button class="nav-button" data-page="rozwoj"><span class="icon">🌱</span><span class="label">Rozwój</span></button>
+    </nav>
+    
+    <!-- Modale -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="task-modal-title">Nowe zadanie</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <div class="form-group">
+                    <label for="task-name">Nazwa zadania</label>
+                    <input type="text" id="task-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-quadrant">Kwadrant</label>
+                    <select id="task-quadrant">
+                        <option value="1">🔴 Pilne i Ważne</option>
+                        <option value="2">🟠 Ważne, niepilne</option>
+                        <option value="3">🟡 Pilne, nieważne</option>
+                        <option value="4">⚪ Ani pilne, ani ważne</option>
+                    </select>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="task-delegated">
+                    <label for="task-delegated">Zadanie do delegowania</label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-task-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nowa płatność</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="payment-form">
+                <input type="hidden" id="payment-id">
+                <div class="form-group">
+                    <label for="payment-name">Dostawca / Nazwa</label>
+                    <input type="text" id="payment-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="payment-amount">Kwota</label>
+                    <input type="number" id="payment-amount" required>
+                </div>
+                 <div class="form-group">
+                    <label for="payment-date">Termin</label>
+                    <input type="date" id="payment-date" required>
+                </div>
+                 <div class="form-group">
+                    <label for="payment-status">Status</label>
+                    <select id="payment-status">
+                        <option value="unpaid">Do zapłaty</option>
+                        <option value="paid">Opłacona</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-payment-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="idea-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nowy pomysł</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="idea-form">
+                <input type="hidden" id="idea-id">
+                <div class="form-group">
+                    <label for="idea-text">Twój pomysł</label>
+                    <textarea id="idea-text" rows="3" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-idea-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="health-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nowy wpis zdrowotny</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="health-form">
+                 <input type="hidden" id="health-id">
+                 <div class="form-group">
+                    <label for="health-date">Data</label>
+                    <input type="date" id="health-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="health-mood">Nastrój (1-5)</label>
+                    <input type="number" id="health-mood" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <label for="health-person">Dla kogo wizyta?</label>
+                    <select id="health-person">
+                        <option value="Karolina">Karolina</option>
+                        <option value="Tomek">Tomek</option>
+                        <option value="Zosia">Zosia</option>
+                        <option value="Tymek">Tymek</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="health-appointment">Termin wizyty lekarskiej (opcjonalnie)</label>
+                    <input type="text" id="health-appointment" placeholder="np. Kardiolog, 15.10, 10:30">
+                </div>
+                 <div class="form-group">
+                    <label for="health-notes">Notatki (np. waga, ciśnienie)</label>
+                    <textarea id="health-notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-health-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="sync-modal" class="modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h3 class="modal-title">Synchronizacja Danych</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p>Użyj poniższych opcji, aby przenieść dane między urządzeniami.</p>
+            <button id="export-json-btn" class="btn">Eksportuj JSON</button>
+            <input type="file" id="import-json-input" style="display: none;">
+            <button id="import-json-btn" class="btn">Importuj JSON</button>
+            <hr>
+            <p>Pokaż kod QR na jednym urządzeniu i zeskanuj go na drugim (funkcja wkrótce).</p>
+            <div id="qr-code-container"></div>
+            <button id="generate-qr-btn" class="btn">Generuj QR</button>
+        </div>
+    </div>
+    
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h3 class="modal-title" id="alert-title">Powiadomienie</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p id="alert-message"></p>
+        </div>
+    </div>
+    
+    <!-- NOWE MODALE -->
+    <div id="focus-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Czas na skupienie!</h3>
+            <div id="focus-timer">25:00</div>
+            <div class="form-actions" style="justify-content: center;">
+                <button id="focus-start-stop" class="btn">Start</button>
+                <button id="focus-close" class="btn">Zamknij</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="habit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nowy nawyk</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="habit-form">
+                <input type="hidden" id="habit-id">
+                <div class="form-group">
+                    <label for="habit-name">Nazwa nawyku</label>
+                    <input type="text" id="habit-name" required placeholder="np. Pij wodę">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="delete-habit-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    
+        // =================================================================================
+        // == APLIKACJA GŁÓWNA (app.js) ==
+        // =================================================================================
+        const app = {
+            state: {
+                theme: 'light',
+                tasks: [],
+                payments: [],
+                health: [],
+                ideas: [],
+                customIdeas: '',
+                wins: {}, // { 'YYYY-MM-DD': ['zwycięstwo 1'] }
+                meals: { shoppingList: '' }, // { 'monday': { breakfast: '', ... }, shoppingList: '' }
+                habits: [], // { id, name, completed: {'YYYY-MM-DD': true} }
+            },
+            
+            init() {
+                this.loadState();
+                this.applyTheme();
+                this.setupEventListeners();
+                this.renderAll();
+                this.requestNotificationPermission();
+            },
+            
+            // --- Zarządzanie Stanem i Danych ---
+            loadState() {
+                const savedState = localStorage.getItem('appState');
+                if (savedState) {
+                    // Łączymy zapisany stan z domyślnym, aby zapewnić istnienie nowych pól
+                    this.state = Object.assign(this.state, JSON.parse(savedState));
+                }
+            },
+            
+            saveState() {
+                localStorage.setItem('appState', JSON.stringify(this.state));
+            },
+            
+            // --- Renderowanie ---
+            renderAll() {
+                pulpit.render();
+                tasks.render();
+                payments.render();
+                health.render();
+                ideas.render();
+                growth.render();
+                meals.render();
+                habits.render();
+            },
+
+            // --- Motyw (ciemny/jasny) ---
+            applyTheme() {
+                if (this.state.theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.getElementById('theme-toggle').textContent = '☀️';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                     document.getElementById('theme-toggle').textContent = '🌙';
+                }
+            },
+            
+            toggleTheme() {
+                this.state.theme = this.state.theme === 'light' ? 'dark' : 'light';
+                this.applyTheme();
+                this.saveState();
+            },
+
+            // --- Nawigacja ---
+            navigateTo(pageId) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+
+                document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+                document.querySelector(`.nav-button[data-page="${pageId}"]`).classList.add('active');
+            },
+
+            // --- Modale ---
+            showModal(modalId) { document.getElementById(modalId).classList.add('visible'); },
+            hideModal(modalId) { document.getElementById(modalId).classList.remove('visible'); },
+            
+            // --- Alerty ---
+            showAlert(title, message) {
+                document.getElementById('alert-title').textContent = title;
+                document.getElementById('alert-message').textContent = message;
+                this.showModal('alert-modal');
+            },
+            
+            // --- Powiadomienia Web ---
+            requestNotificationPermission() {
+                if ('Notification' in window && Notification.permission !== 'granted') {
+                    Notification.requestPermission();
+                }
+            },
+            
+            sendNotification(title, body) {
+                 if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification(title, { body: body, icon: './icon.png' });
+                 }
+            },
+
+            // --- Event Listeners ---
+            setupEventListeners() {
+                // Przełącznik motywu
+                document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
+
+                // Nawigacja
+                document.querySelector('.nav-bar').addEventListener('click', (e) => {
+                    const button = e.target.closest('.nav-button');
+                    if (button) {
+                        this.navigateTo(button.dataset.page);
+                    }
+                });
+
+                // Zamykanie modali
+                document.querySelectorAll('.modal .close-modal').forEach(btn => {
+                    btn.addEventListener('click', () => this.hideModal(btn.closest('.modal').id));
+                });
+                
+                // Zamykanie modali przez kliknięcie tła
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', e => {
+                        if (e.target === modal) {
+                            this.hideModal(modal.id);
+                        }
+                    });
+                });
+                
+                // Przyciski "Dodaj"
+                document.getElementById('add-task-btn').addEventListener('click', () => tasks.showEditModal());
+                document.getElementById('add-payment-btn').addEventListener('click', () => payments.showEditModal());
+                document.getElementById('add-idea-btn').addEventListener('click', () => ideas.showEditModal());
+                document.getElementById('add-health-btn').addEventListener('click', () => health.showEditModal());
+                document.getElementById('add-habit-btn').addEventListener('click', () => habits.showEditModal());
+
+
+                // Formularze
+                document.getElementById('task-form').addEventListener('submit', (e) => tasks.handleSubmit(e));
+                document.getElementById('payment-form').addEventListener('submit', (e) => payments.handleSubmit(e));
+                document.getElementById('idea-form').addEventListener('submit', (e) => ideas.handleSubmit(e));
+                document.getElementById('health-form').addEventListener('submit', (e) => health.handleSubmit(e));
+                document.getElementById('add-win-form').addEventListener('submit', (e) => pulpit.addWin(e));
+                document.getElementById('habit-form').addEventListener('submit', (e) => habits.handleSubmit(e));
+
+
+                // Przyciski usuwania
+                document.getElementById('delete-task-btn').addEventListener('click', () => tasks.handleDelete());
+                document.getElementById('delete-payment-btn').addEventListener('click', () => payments.handleDelete());
+                document.getElementById('delete-idea-btn').addEventListener('click', () => ideas.handleDelete());
+                document.getElementById('delete-health-btn').addEventListener('click', () => health.handleDelete());
+                document.getElementById('delete-habit-btn').addEventListener('click', () => habits.handleDelete());
+
+                
+                // Sekcja Rozwój
+                document.getElementById('generate-steps-btn').addEventListener('click', () => growth.generateGoalSteps());
+                document.getElementById('save-custom-ideas-btn').addEventListener('click', () => growth.saveCustomIdeas());
+                
+                // Synchronizacja
+                document.getElementById('sync-button').addEventListener('click', () => this.showModal('sync-modal'));
+                document.getElementById('export-json-btn').addEventListener('click', () => this.exportJSON());
+                document.getElementById('import-json-btn').addEventListener('click', () => document.getElementById('import-json-input').click());
+                document.getElementById('import-json-input').addEventListener('change', (e) => this.importJSON(e));
+                document.getElementById('generate-qr-btn').addEventListener('click', () => this.generateQR());
+
+                // Nowe Listenery
+                document.getElementById('focus-btn').addEventListener('click', () => focusMode.show());
+                document.getElementById('shopping-list').addEventListener('change', (e) => meals.saveShoppingList(e.target.value));
+
+            },
+            
+            // --- Synchronizacja ---
+            exportJSON() {
+                const dataStr = JSON.stringify(this.state);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = 'wez-sie-do-roboty-data.json';
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            },
+            
+            importJSON(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedState = JSON.parse(e.target.result);
+                        // Walidacja podstawowa
+                        if (importedState.tasks && importedState.theme) {
+                            this.state = importedState;
+                            this.saveState();
+                            this.applyTheme();
+                            this.renderAll();
+                            this.showAlert('Sukces', 'Dane zostały pomyślnie zaimportowane.');
+                        } else {
+                            throw new Error('Nieprawidłowy format pliku.');
+                        }
+                    } catch (error) {
+                         this.showAlert('Błąd', 'Nie udało się zaimportować danych. Sprawdź format pliku.');
+                    } finally {
+                        this.hideModal('sync-modal');
+                    }
+                };
+                reader.readAsText(file);
+            },
+            
+            generateQR() {
+                const dataStr = JSON.stringify(this.state);
+                const qrContainer = document.getElementById('qr-code-container');
+                qrContainer.innerHTML = '';
+                new QRious({
+                    element: qrContainer,
+                    value: dataStr,
+                    size: 200,
+                    background: 'white',
+                    foreground: 'black'
+                });
+                this.showAlert('Kod QR', 'Funkcja skanowania QR jest w przygotowaniu. Na razie możesz zrobić zrzut ekranu i użyć zewnętrznej aplikacji do odczytu danych.');
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: PULPIT (dashboard.js) ==
+        // =================================================================================
+        const pulpit = {
+            mottos: [
+                "Jesteś architektem swojego dnia. Zbuduj arcydzieło.",
+                "Mały postęp to wciąż postęp. Idź do przodu.",
+                "Energia podąża za uwagą. Skup się na tym, co ważne.",
+                "Zrobione jest lepsze od doskonałego.",
+                "Pamiętaj, dlaczego zaczęłaś. Twoja pasja jest Twoją siłą."
+            ],
+            strategicGoals: [
+                "UX/UI: Przeanalizuj 1 stronę konkurencji pod kątem użyteczności.",
+                "AI: Poświęć 15 minut na przeczytanie artykułu o nowościach w AI.",
+                "WWW: Naucz się jednej nowej właściwości CSS.",
+                "UX/UI: Zaprojektuj jeden nowy element dla swojej strony.",
+                "AI: Przetestuj jedno narzędzie AI, które może usprawnić Twoją pracę."
+            ],
+            kpiGoals: [
+                "HappyKiddy: Sprawdź statystyki odwiedzin sklepu z wczoraj.",
+                "HappyKiddy: Odpisz na wszystkie komentarze w social media.",
+                "Marketing: Zaplanuj 1 post na Instagram.",
+                "Marketing: Wymyśl hasło do nowej kampanii promocyjnej.",
+                "HappyKiddy: Spakuj i przygotuj do wysyłki 1 zamówienie z uśmiechem."
+            ],
+            selfCareIdeas: [
+                "Zaparz ulubioną herbatę i wypij ją w ciszy.",
+                "Włącz ulubioną piosenkę i potańcz przez 3 minuty.",
+                "Wyjdź na 5-minutowy spacer, żeby odetchnąć świeżym powietrzem.",
+                "Poczytaj książkę przez 10 minut.",
+                "Zrób sobie krótki masaż dłoni z pachnącym kremem."
+            ],
+            cleaningMotivators: [
+                "Uporządkuj biurko. Czysta przestrzeń to czysty umysł.",
+                "Wyrzuć 5 niepotrzebnych rzeczy. Poczuj lekkość!",
+                "Pościel łóżko. To pierwsze małe zwycięstwo dnia.",
+                "Umyj naczynia od razu. Twoje przyszłe 'ja' Ci podziękuje.",
+                "Przetrzyj ekran telefonu i laptopa. Zobacz świat wyraźniej."
+            ],
+
+            render() {
+                const today = new Date().toDateString();
+                let dailyData = localStorage.getItem('dailyPulpitData');
+                
+                if (dailyData) {
+                    dailyData = JSON.parse(dailyData);
+                }
+
+                // Jeśli nie ma danych lub jest nowy dzień, wygeneruj nowe dane
+                if (!dailyData || dailyData.date !== today) {
+                    dailyData = {
+                        date: today,
+                        motto: this.getRandomItem(this.mottos),
+                        strategicGoal: this.getRandomItem(this.strategicGoals),
+                        kpiGoal: this.getRandomItem(this.kpiGoals),
+                        selfCare: this.getRandomItem(this.selfCareIdeas),
+                        cleaning: this.getRandomItem(this.cleaningMotivators)
+                    };
+                    localStorage.setItem('dailyPulpitData', JSON.stringify(dailyData));
+                }
+                
+                // Renderowanie danych
+                document.getElementById('daily-motto').textContent = dailyData.motto;
+                document.getElementById('strategic-goals').textContent = dailyData.strategicGoal;
+                document.getElementById('kpi-goals').textContent = dailyData.kpiGoal;
+                document.getElementById('self-care-idea').textContent = dailyData.selfCare;
+                document.getElementById('cleaning-motivator').textContent = dailyData.cleaning;
+                
+                this.renderPriorities();
+                this.renderUrgentItems();
+                this.renderWins();
+            },
+
+            getRandomItem(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            },
+
+            renderPriorities() {
+                const list = document.getElementById('daily-priorities');
+                list.innerHTML = '';
+                const priorityTasks = app.state.tasks.filter(t => t.quadrant == 1 || t.quadrant == 2).slice(0, 3);
+                
+                if (priorityTasks.length > 0) {
+                    priorityTasks.forEach(task => {
+                        const p = document.createElement('p');
+                        p.textContent = `• ${task.name}`;
+                        list.appendChild(p);
+                    });
+                } else {
+                    list.innerHTML = '<p>Brak ważnych zadań. Czas na strategiczne myślenie!</p>';
+                }
+            },
+
+            renderUrgentItems() {
+                const paymentsContainer = document.getElementById('urgent-payments');
+                const appointmentsContainer = document.getElementById('upcoming-appointments');
+                paymentsContainer.innerHTML = '';
+                appointmentsContainer.innerHTML = '';
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Ustawiamy na początek dnia
+                const twoDaysFromNow = new Date(today);
+                twoDaysFromNow.setDate(today.getDate() + 2);
+
+                // Pilne płatności
+                const urgentPayments = app.state.payments.filter(p => {
+                    const paymentDate = new Date(p.date);
+                    return p.status !== 'paid' && paymentDate >= today && paymentDate <= twoDaysFromNow;
+                });
+
+                if (urgentPayments.length > 0) {
+                    urgentPayments.forEach(p => {
+                        const pEl = document.createElement('p');
+                        pEl.textContent = `${p.name} - ${p.amount} zł (do ${p.date})`;
+                        paymentsContainer.appendChild(pEl);
+                    });
+                } else {
+                    paymentsContainer.innerHTML = '<p>Brak pilnych płatności. Chwila oddechu!</p>';
+                }
+
+                // Nadchodzące wizyty
+                const upcomingAppointments = app.state.health.filter(h => {
+                    if (!h.appointment) return false;
+                    const appointmentDate = new Date(h.date);
+                    return appointmentDate >= today && appointmentDate <= twoDaysFromNow;
+                });
+                
+                if (upcomingAppointments.length > 0) {
+                    upcomingAppointments.forEach(h => {
+                        const pEl = document.createElement('p');
+                        const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
+                        pEl.innerHTML = `${personLabel} ${h.appointment} - ${h.date}`;
+                        appointmentsContainer.appendChild(pEl);
+                    });
+                } else {
+                    appointmentsContainer.innerHTML = '<p>Brak wizyt w najbliższym czasie. Zdrowie dopisuje!</p>';
+                }
+            },
+
+            renderWins() {
+                const list = document.getElementById('wins-list');
+                list.innerHTML = '';
+                const todayKey = new Date().toISOString().slice(0, 10);
+                const todaysWins = app.state.wins[todayKey] || [];
+                
+                if (todaysWins.length > 0) {
+                    todaysWins.forEach(win => {
+                        const li = document.createElement('li');
+                        li.textContent = win;
+                        list.appendChild(li);
+                    });
+                } else {
+                    list.innerHTML = '<li>Doceniaj małe sukcesy!</li>';
+                }
+            },
+            
+            addWin(e) {
+                e.preventDefault();
+                const input = document.getElementById('win-input');
+                const winText = input.value.trim();
+                if (!winText) return;
+
+                const todayKey = new Date().toISOString().slice(0, 10);
+                if (!app.state.wins[todayKey]) {
+                    app.state.wins[todayKey] = [];
+                }
+                app.state.wins[todayKey].push(winText);
+                
+                app.saveState();
+                this.renderWins();
+                input.value = '';
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: ZADANIA (tasks.js) ==
+        // =================================================================================
+        const tasks = {
+            draggedItem: null,
+            
+            render() {
+                document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
+                app.state.tasks.forEach(task => {
+                    const taskEl = this.createTaskElement(task);
+                    document.querySelector(`#q${task.quadrant} .task-list`).appendChild(taskEl);
+                });
+                this.setupDragAndDrop();
+            },
+            
+            createTaskElement(task) {
+                const div = document.createElement('div');
+                div.className = 'task';
+                if (task.delegated) {
+                    div.classList.add('delegated');
+                }
+                div.draggable = true;
+                div.dataset.id = task.id;
+                div.innerHTML = `
+                    <span>${task.name} ${task.delegated ? '🤝' : ''}</span>
+                    <div class="task-actions">
+                        <button class="edit-task">✏️</button>
+                    </div>
+                `;
+                div.querySelector('.edit-task').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.showEditModal(task.id);
+                });
+                return div;
+            },
+            
+            showEditModal(id) {
+                const form = document.getElementById('task-form');
+                form.reset();
+                document.getElementById('task-id').value = id || '';
+                
+                const deleteBtn = document.getElementById('delete-task-btn');
+                if (id) {
+                    const task = app.state.tasks.find(t => t.id === id);
+                    document.getElementById('task-modal-title').textContent = 'Edytuj zadanie';
+                    document.getElementById('task-name').value = task.name;
+                    document.getElementById('task-quadrant').value = task.quadrant;
+                    document.getElementById('task-delegated').checked = task.delegated || false;
+                    deleteBtn.style.display = 'inline-block';
+                } else {
+                    document.getElementById('task-modal-title').textContent = 'Nowe zadanie';
+                    deleteBtn.style.display = 'none';
+                }
+                app.showModal('task-modal');
+            },
+
+            handleSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('task-id').value;
+                const name = document.getElementById('task-name').value;
+                const quadrant = document.getElementById('task-quadrant').value;
+                const delegated = document.getElementById('task-delegated').checked;
+
+                if (id) { // Edycja
+                    const task = app.state.tasks.find(t => t.id === id);
+                    task.name = name;
+                    task.quadrant = quadrant;
+                    task.delegated = delegated;
+                } else { // Nowe zadanie
+                    app.state.tasks.push({
+                        id: `task-${Date.now()}`,
+                        name,
+                        quadrant,
+                        delegated
+                    });
+                }
+                
+                app.saveState();
+                this.render();
+                pulpit.render(); // Aktualizacja pulpitu
+                app.hideModal('task-modal');
+            },
+            
+            handleDelete() {
+                const id = document.getElementById('task-id').value;
+                app.state.tasks = app.state.tasks.filter(t => t.id !== id);
+                app.saveState();
+                this.render();
+                pulpit.render();
+                app.hideModal('task-modal');
+            },
+            
+            // --- Drag & Drop ---
+            setupDragAndDrop() {
+                const tasksEls = document.querySelectorAll('.task');
+                const quadrants = document.querySelectorAll('.quadrant');
+
+                tasksEls.forEach(taskEl => {
+                    taskEl.addEventListener('dragstart', () => {
+                        this.draggedItem = taskEl;
+                        setTimeout(() => taskEl.classList.add('dragging'), 0);
+                    });
+                    taskEl.addEventListener('dragend', () => {
+                        taskEl.classList.remove('dragging');
+                        this.draggedItem = null;
+                    });
+                });
+                
+                quadrants.forEach(quadrant => {
+                    quadrant.addEventListener('dragover', e => {
+                        e.preventDefault();
+                    });
+                    quadrant.addEventListener('drop', e => {
+                        e.preventDefault();
+                        const targetQuadrant = e.target.closest('.quadrant');
+                        if (!targetQuadrant) return;
+
+                        const draggedId = this.draggedItem.dataset.id;
+                        const newQuadrantId = targetQuadrant.dataset.quadrant;
+
+                        if (draggedId.startsWith('task-')) {
+                            // Przenoszenie zadania
+                            const task = app.state.tasks.find(t => t.id === draggedId);
+                            if (task) {
+                                task.quadrant = newQuadrantId;
+                                app.saveState();
+                                this.render();
+                            }
+                        } else if (draggedId.startsWith('idea-') || draggedId.startsWith('payment-')) {
+                            // Konwersja pomysłu/płatności na zadanie
+                            let name;
+                            if (draggedId.startsWith('idea-')) {
+                                const idea = app.state.ideas.find(i => i.id === draggedId);
+                                name = idea.text;
+                                app.state.ideas = app.state.ideas.filter(i => i.id !== draggedId); // Usuń pomysł
+                                ideas.render();
+                            } else {
+                                const payment = app.state.payments.find(p => p.id === draggedId);
+                                name = `Zapłać: ${payment.name} (${payment.amount} zł)`;
+                            }
+                            
+                            app.state.tasks.push({
+                                id: `task-${Date.now()}`,
+                                name: name,
+                                quadrant: newQuadrantId
+                            });
+                            app.saveState();
+                            this.render();
+                        }
+                    });
+                });
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: PŁATNOŚCI (payments.js) ==
+        // =================================================================================
+        const payments = {
+            render() {
+                const list = document.getElementById('payments-list');
+                list.innerHTML = '';
+                if(app.state.payments.length === 0) {
+                    list.innerHTML = '<p>Brak płatności na liście. Możesz odetchnąć!</p>';
+                    return;
+                }
+                
+                const sortedPayments = [...app.state.payments].sort((a,b) => new Date(a.date) - new Date(b.date));
+                
+                sortedPayments.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'payment-item';
+                    item.dataset.id = p.id;
+                    
+                    const daysDiff = (new Date(p.date) - new Date()) / (1000 * 60 * 60 * 24);
+                    let statusClass = 'status-pending';
+                    let statusText = 'Oczekuje';
+
+                    if (p.status === 'paid') {
+                        statusClass = 'status-paid';
+                        statusText = 'Opłacona';
+                    } else if (daysDiff < 0) {
+                        statusClass = 'status-overdue';
+                        statusText = 'Zaległa';
+                    } else if (daysDiff <= 7) {
+                        statusClass = 'status-approaching';
+                        statusText = 'Zbliża się';
+                    }
+                    
+                    item.innerHTML = `
+                        <div>
+                            <span>${p.name} - <strong>${p.amount} zł</strong> (do ${p.date})</span>
+                            <span class="payment-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <button class="edit-payment">✏️</button>
+                    `;
+                    item.querySelector('.edit-payment').addEventListener('click', () => this.showEditModal(p.id));
+                    list.appendChild(item);
+                });
+            },
+            
+             showEditModal(id) {
+                const form = document.getElementById('payment-form');
+                form.reset();
+                document.getElementById('payment-id').value = id || '';
+                
+                const deleteBtn = document.getElementById('delete-payment-btn');
+                if (id) {
+                    const p = app.state.payments.find(p => p.id === id);
+                    document.getElementById('payment-name').value = p.name;
+                    document.getElementById('payment-amount').value = p.amount;
+                    document.getElementById('payment-date').value = p.date;
+                    document.getElementById('payment-status').value = p.status || 'unpaid';
+                    deleteBtn.style.display = 'inline-block';
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
+                app.showModal('payment-modal');
+            },
+            
+            handleSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('payment-id').value;
+                const name = document.getElementById('payment-name').value;
+                const amount = document.getElementById('payment-amount').value;
+                const date = document.getElementById('payment-date').value;
+                const status = document.getElementById('payment-status').value;
+
+                if (id) {
+                    const p = app.state.payments.find(p => p.id === id);
+                    p.name = name;
+                    p.amount = amount;
+                    p.date = date;
+                    p.status = status;
+                } else {
+                    app.state.payments.push({ id: `payment-${Date.now()}`, name, amount, date, status });
+                    app.sendNotification('Nowa płatność', `Pamiętaj o terminie płatności za ${name} do dnia ${date}.`);
+                }
+                
+                app.saveState();
+                this.render();
+                pulpit.render();
+                app.hideModal('payment-modal');
+            },
+            
+            handleDelete() {
+                 const id = document.getElementById('payment-id').value;
+                app.state.payments = app.state.payments.filter(p => p.id !== id);
+                app.saveState();
+                this.render();
+                pulpit.render();
+                app.hideModal('payment-modal');
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: ZDROWIE (health.js) ==
+        // =================================================================================
+        const health = {
+            render() {
+                const list = document.getElementById('health-list');
+                list.innerHTML = '';
+                if (app.state.health.length === 0) {
+                    list.innerHTML = '<p>Brak wpisów. Dodaj pierwszy, by śledzić swoje samopoczucie.</p>';
+                    return;
+                }
+
+                // Sort entries by date, newest first
+                const sortedHealth = [...app.state.health].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Group entries by date string
+                const groupedByDate = sortedHealth.reduce((acc, entry) => {
+                    const dateStr = new Date(entry.date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+                    if (!acc[dateStr]) {
+                        acc[dateStr] = [];
+                    }
+                    acc[dateStr].push(entry);
+                    return acc;
+                }, {});
+
+                // Render grouped entries
+                for (const dateStr in groupedByDate) {
+                    const dateHeader = document.createElement('h3');
+                    dateHeader.textContent = dateStr;
+                    list.appendChild(dateHeader);
+
+                    const entriesForDay = groupedByDate[dateStr];
+                    entriesForDay.forEach(h => {
+                        const item = document.createElement('div');
+                        item.className = 'health-item';
+
+                        let appointmentHTML = '';
+                        if (h.appointment && h.appointment.trim() !== '') {
+                            const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
+                            appointmentHTML = `
+                                <div class="appointment-details">
+                                    ${personLabel}
+                                    <span class="appointment-info">🩺 ${h.appointment}</span>
+                                </div>
+                            `;
+                        }
+                        
+                        let notesHTML = '';
+                        if (h.notes && h.notes.trim() !== '') {
+                            notesHTML = `<p class="health-notes">${h.notes}</p>`;
+                        }
+
+                        item.innerHTML = `
+                            <div class="health-content">
+                                ${appointmentHTML}
+                                <div class="mood-details">
+                                    <strong>Nastrój: ${'😊'.repeat(h.mood)}</strong>
+                                </div>
+                                ${notesHTML}
+                            </div>
+                            <button class="edit-health" data-id="${h.id}">✏️</button>
+                        `;
+                        item.querySelector('.edit-health').addEventListener('click', () => this.showEditModal(h.id));
+                        list.appendChild(item);
+                    });
+                }
+            },
+            
+            showEditModal(id) {
+                const form = document.getElementById('health-form');
+                form.reset();
+                document.getElementById('health-id').value = id || '';
+                
+                const deleteBtn = document.getElementById('delete-health-btn');
+                if (id) {
+                    const h = app.state.health.find(h => h.id === id);
+                    document.getElementById('health-date').value = h.date;
+                    document.getElementById('health-mood').value = h.mood;
+                    document.getElementById('health-person').value = h.person || 'Karolina';
+                    document.getElementById('health-appointment').value = h.appointment || '';
+                    document.getElementById('health-notes').value = h.notes;
+                    deleteBtn.style.display = 'inline-block';
+                } else {
+                    document.getElementById('health-date').valueAsDate = new Date();
+                    deleteBtn.style.display = 'none';
+                }
+                app.showModal('health-modal');
+            },
+            
+            handleSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('health-id').value;
+                const date = document.getElementById('health-date').value;
+                const mood = document.getElementById('health-mood').value;
+                const person = document.getElementById('health-person').value;
+                const appointment = document.getElementById('health-appointment').value;
+                const notes = document.getElementById('health-notes').value;
+
+                if (id) {
+                    const h = app.state.health.find(h => h.id === id);
+                    h.date = date;
+                    h.mood = mood;
+                    h.person = person;
+                    h.appointment = appointment;
+                    h.notes = notes;
+                } else {
+                    app.state.health.push({ id: `health-${Date.now()}`, date, mood, person, appointment, notes });
+                }
+                
+                app.saveState();
+                this.render();
+                pulpit.render();
+                app.hideModal('health-modal');
+            },
+            
+            handleDelete() {
+                const id = document.getElementById('health-id').value;
+                app.state.health = app.state.health.filter(h => h.id !== id);
+                app.saveState();
+                this.render();
+                app.hideModal('health-modal');
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: POMYSŁY (ideas.js) ==
+        // =================================================================================
+        const ideas = {
+            render() {
+                const list = document.getElementById('ideas-list');
+                list.innerHTML = '';
+                 if(app.state.ideas.length === 0) {
+                    list.innerHTML = '<p>Głowa pusta? Czas na kawę! A potem dodaj tu swoje genialne pomysły.</p>';
+                    return;
+                }
+                app.state.ideas.forEach(idea => {
+                    const item = document.createElement('div');
+                    item.className = 'idea-item task'; // Używamy klasy task dla drag&drop
+                    item.draggable = true;
+                    item.dataset.id = idea.id;
+                    item.innerHTML = `
+                        <span>${idea.text}</span>
+                        <button class="edit-idea">✏️</button>
+                    `;
+                    item.querySelector('.edit-idea').addEventListener('click', () => this.showEditModal(idea.id));
+                    list.appendChild(item);
+                });
+                // Ponowne ustawienie Drag and Drop po renderowaniu pomysłów
+                tasks.setupDragAndDrop();
+            },
+            
+             showEditModal(id) {
+                const form = document.getElementById('idea-form');
+                form.reset();
+                document.getElementById('idea-id').value = id || '';
+                
+                const deleteBtn = document.getElementById('delete-idea-btn');
+                if (id) {
+                    const idea = app.state.ideas.find(i => i.id === id);
+                    document.getElementById('idea-text').value = idea.text;
+                    deleteBtn.style.display = 'inline-block';
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
+                app.showModal('idea-modal');
+            },
+            
+            handleSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('idea-id').value;
+                const text = document.getElementById('idea-text').value;
+
+                if (id) {
+                    const idea = app.state.ideas.find(i => i.id === id);
+                    idea.text = text;
+                } else {
+                    app.state.ideas.push({ id: `idea-${Date.now()}`, text });
+                }
+                
+                app.saveState();
+                this.render();
+                app.hideModal('idea-modal');
+            },
+            
+            handleDelete() {
+                const id = document.getElementById('idea-id').value;
+                app.state.ideas = app.state.ideas.filter(i => i.id !== id);
+                app.saveState();
+                this.render();
+                app.hideModal('idea-modal');
+            }
+        };
+
+        // =================================================================================
+        // == Komponent: ROZWÓJ (growth.js) ==
+        // =================================================================================
+        const growth = {
+             goalStepsDB: {
+                "sprzedaż": ["Analiza konkurencji", "Stworzenie nowej oferty promocyjnej", "Zwiększenie budżetu na reklamy", "Nawiązanie współpracy z influencerem"],
+                "marketing": ["Zaplanowanie kalendarza postów na miesiąc", "Stworzenie kampanii email marketingowej", "Nagraj rolkę na Instagram", "Przeprowadź ankietę wśród klientów"],
+                "nauka": ["Wybierz kurs online", "Poświęć 30 minut dziennie na naukę", "Znajdź mentora", "Przeczytak książkę branżową"],
+                "organizacja": ["Posprzątaj biurko", "Zrób listę priorytetów na tydzień", "Przetestuj nową aplikację do zarządzania czasem", "Deleguj jedno zadanie"]
+            },
+            
+            render() {
+                document.getElementById('custom-ideas-editor').value = app.state.customIdeas || '';
+            },
+
+            generateGoalSteps() {
+                const input = document.getElementById('goal-input').value.toLowerCase();
+                const output = document.getElementById('goal-steps-output');
+                output.innerHTML = '';
+
+                let steps = [];
+                for (const key in this.goalStepsDB) {
+                    if (input.includes(key)) {
+                        steps = this.goalStepsDB[key];
+                        break;
+                    }
+                }
+
+                if (steps.length > 0) {
+                    const ul = document.createElement('ul');
+                    steps.forEach(step => {
+                        const li = document.createElement('li');
+                        li.textContent = step;
+                        ul.appendChild(li);
+                    });
+                    output.appendChild(ul);
+                } else {
+                    output.innerHTML = '<p>Nie mam gotowego planu na ten cel. Spróbuj ująć to inaczej, np. "rozwój sprzedaży", "lepsza organizacja".</p>';
+                }
+            },
+            
+            saveCustomIdeas() {
+                app.state.customIdeas = document.getElementById('custom-ideas-editor').value;
+                app.saveState();
+                app.showAlert('Zapisano!', 'Twoja baza pomysłów została zaktualizowana.');
+            }
+        };
+
+        // =================================================================================
+        // == NOWE KOMPONENTY ==
+        // =================================================================================
+
+        const focusMode = {
+            timerInterval: null,
+            timeLeft: 25 * 60,
+            isRunning: false,
+            
+            show() {
+                this.reset();
+                app.showModal('focus-modal');
+                document.getElementById('focus-start-stop').addEventListener('click', () => this.toggle());
+                document.getElementById('focus-close').addEventListener('click', () => this.hide());
+            },
+            
+            hide() {
+                this.stop();
+                app.hideModal('focus-modal');
+            },
+
+            toggle() {
+                this.isRunning ? this.stop() : this.start();
+            },
+
+            start() {
+                this.isRunning = true;
+                document.getElementById('focus-start-stop').textContent = 'Pauza';
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateDisplay();
+                    if (this.timeLeft <= 0) {
+                        this.stop();
+                        app.sendNotification('Koniec!', 'Czas na przerwę! Świetna robota!');
+                        // Dźwięk powiadomienia
+                        new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(300).join("12345678")).play();
+                    }
+                }, 1000);
+            },
+            
+            stop() {
+                this.isRunning = false;
+                document.getElementById('focus-start-stop').textContent = 'Start';
+                clearInterval(this.timerInterval);
+            },
+            
+            reset() {
+                this.stop();
+                this.timeLeft = 25 * 60;
+                this.updateDisplay();
+            },
+            
+            updateDisplay() {
+                const minutes = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
+                const seconds = (this.timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById('focus-timer').textContent = `${minutes}:${seconds}`;
+            }
+        };
+
+        const meals = {
+            days: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'],
+            
+            render() {
+                const grid = document.getElementById('meals-grid');
+                grid.innerHTML = '';
+                this.days.forEach(day => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'meal-day-card';
+                    const dayKey = day.toLowerCase();
+                    dayCard.innerHTML = `
+                        <h4>${day}</h4>
+                        <input type="text" data-day="${dayKey}" data-meal="breakfast" placeholder="Śniadanie" value="${app.state.meals[dayKey]?.breakfast || ''}">
+                        <input type="text" data-day="${dayKey}" data-meal="lunch" placeholder="Obiad" value="${app.state.meals[dayKey]?.lunch || ''}">
+                        <input type="text" data-day="${dayKey}" data-meal="dinner" placeholder="Kolacja" value="${app.state.meals[dayKey]?.dinner || ''}">
+                    `;
+                    grid.appendChild(dayCard);
+                });
+
+                document.getElementById('shopping-list').value = app.state.meals.shoppingList || '';
+
+                grid.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('change', (e) => this.saveMeal(e.target));
+                });
+            },
+            
+            saveMeal(input) {
+                const { day, meal } = input.dataset;
+                if (!app.state.meals[day]) {
+                    app.state.meals[day] = {};
+                }
+                app.state.meals[day][meal] = input.value;
+                app.saveState();
+            },
+            
+            saveShoppingList(value) {
+                app.state.meals.shoppingList = value;
+                app.saveState();
+            }
+        };
+
+        const habits = {
+            render() {
+                const list = document.getElementById('habits-list');
+                list.innerHTML = '';
+                 if (app.state.habits.length === 0) {
+                    list.innerHTML = '<p>Zacznij od jednego małego nawyku. Zobaczysz, jaką zrobi różnicę!</p>';
+                    return;
+                }
+
+                const todayKey = new Date().toISOString().slice(0, 10);
+
+                app.state.habits.forEach(habit => {
+                    const item = document.createElement('div');
+                    item.className = 'habit-item';
+                    const isCompleted = habit.completed && habit.completed[todayKey];
+
+                    item.innerHTML = `
+                        <label for="habit-${habit.id}">${habit.name}</label>
+                        <input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}>
+                    `;
+                    item.querySelector('input').addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id));
+                    list.appendChild(item);
+                });
+            },
+
+            showEditModal(id) {
+                // Ta funkcja może być rozbudowana o edycję, na razie tylko dodaje
+                document.getElementById('habit-form').reset();
+                app.showModal('habit-modal');
+            },
+
+            handleSubmit(e) {
+                e.preventDefault();
+                const name = document.getElementById('habit-name').value.trim();
+                if (!name) return;
+
+                app.state.habits.push({
+                    id: `habit-${Date.now()}`,
+                    name: name,
+                    completed: {}
+                });
+
+                app.saveState();
+                this.render();
+                app.hideModal('habit-modal');
+            },
+            
+            handleDelete() {
+                // Do implementacji
+            },
+
+            toggleComplete(id) {
+                const habit = app.state.habits.find(h => h.id === id);
+                if (!habit) return;
+
+                const todayKey = new Date().toISOString().slice(0, 10);
+                if (!habit.completed) {
+                    habit.completed = {};
+                }
+
+                habit.completed[todayKey] = !habit.completed[todayKey];
+                app.saveState();
+                this.render();
+            }
+        };
+
+
+        // Inicjalizacja Aplikacji
+        app.init();
+    });
+    </script>
+</body>
+</html>
+
