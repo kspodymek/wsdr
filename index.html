@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weź Się Do Roboty</title>
+    <title>Weź się do roboty</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -46,7 +45,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Zapobiega scrollowaniu całej strony */
+            overflow: hidden;
         }
 
         body {
@@ -113,7 +112,7 @@
         main {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 0 1.5rem 80px 1.5rem; /* Padding na dole na nawigację */
+            padding: 0 1.5rem 80px 1.5rem;
         }
         .page { display: none; }
         .page.active { display: block; }
@@ -167,11 +166,12 @@
             flex-direction: column;
             align-items: center;
             color: #888;
-            font-size: 0.65rem; /* Zmniejszona czcionka dla 8 przycisków */
+            font-size: 0.6rem;
             transition: color 0.3s ease;
             flex-grow: 1;
+            text-align: center;
         }
-        .nav-button .icon { font-size: 1.3rem; }
+        .nav-button .icon { font-size: 1.2rem; }
         .nav-button.active { color: var(--c-peach); }
         .nav-button:hover { color: var(--c-lavender); }
 
@@ -214,6 +214,11 @@
             border-radius: 0.5rem;
             font-family: inherit;
         }
+        body.dark-mode .form-group input, body.dark-mode .form-group select, body.dark-mode .form-group textarea {
+            background-color: #4a4a6a;
+            border-color: #5a5a7a;
+            color: var(--text-dark);
+        }
         .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
         .form-actions button {
             background: none; border: none; font-size: 2rem; cursor: pointer;
@@ -248,6 +253,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        .task.completed span {
+            text-decoration: line-through;
+            opacity: 0.6;
         }
         .task.delegated {
             opacity: 0.8;
@@ -294,12 +303,12 @@
         #priority-card {
             background: linear-gradient(135deg, var(--c-peach), var(--c-lavender));
             color: #3d2247;
-            transform: scale(1.02); /* Make it slightly bigger */
+            transform: scale(1.02);
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         #priority-card .card-title {
-            font-size: 1.5rem; /* Bigger title */
+            font-size: 1.5rem;
         }
 
         body.dark-mode #priority-card {
@@ -314,8 +323,8 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Sekcja Zdrowia - Nowe Style */
-        #health-list h3 { /* Nagłówki dat */
+        /* Sekcja Zdrowia */
+        #health-list h3 {
             margin-top: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid rgba(0,0,0,0.1);
@@ -373,7 +382,7 @@
         
         #qr-code-container { text-align: center; margin-top: 1rem; }
 
-        /* --- NOWE KOMPONENTY --- */
+        /* --- NOWE/ULEPSZONE KOMPONENTY --- */
         #focus-modal .modal-content { text-align: center; }
         #focus-timer { font-size: 5rem; font-weight: 700; margin: 2rem 0; }
         
@@ -386,25 +395,71 @@
         .meal-day-card { background-color: rgba(0,0,0,0.02); padding: 1rem; border-radius: 0.5rem; }
         .meal-day-card h4 { margin-top: 0; }
         .meal-day-card input { margin-bottom: 0.5rem; }
+        
+        .meal-planner-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
 
         .habit-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 0.5rem; margin-bottom: 0.5rem; }
         .habit-item label { font-weight: 500; }
         .habit-item input[type="checkbox"] { width: 20px; height: 20px; }
+        
+        #notebook-container { position: relative; }
+        #notebook-area {
+            width: 100%;
+            height: 60vh;
+            border-radius: 0.5rem;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+        }
+        #notebook-sorter-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
 
+        #grouped-shopping-list { margin-top: 1rem; }
+        #grouped-shopping-list h4 { color: var(--c-peach); }
+        body.dark-mode #grouped-shopping-list h4 { color: var(--c-mint); }
 
+        .goal-item {
+            background: rgba(0,0,0,0.02);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .goal-item h4 { margin-top: 0; }
+        .goal-item progress {
+            width: 100%;
+            height: 10px;
+            margin: 0.5rem 0;
+        }
+        .goal-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
         /* --- Responsywność --- */
         @media (max-width: 768px) {
             .app-title { font-size: 1.5rem; }
             main { padding: 0 1rem 80px 1rem; }
             #eisenhower-matrix { grid-template-columns: 1fr; }
-            .nav-button .label { display: none; } /* Ukryj tekst na małych ekranach */
+            .nav-button .label { display: none; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 class="app-title">Wizjonerka</h1>
+        <h1 class="app-title">Weź się do roboty</h1>
         <div class="header-actions">
             <button id="focus-btn" title="Tryb Skupienia">🎯</button>
             <button id="theme-toggle" title="Zmień motyw">🌙</button>
@@ -415,6 +470,10 @@
     <main>
         <!-- Strona: Pulpit -->
         <section id="pulpit" class="page active">
+            <div class="card-title">
+                <h2>Witaj, Karolka!</h2>
+                <button id="weekly-review-btn" class="btn">Review Tygodnia</button>
+            </div>
             <div class="grid-container">
                 <div class="card" id="priority-card">
                     <h2 class="card-title">⭐ Priorytety na dziś</h2>
@@ -500,25 +559,32 @@
             <button id="add-health-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Wpis</button>
         </section>
         
-        <!-- NOWA Strona: Posiłki -->
+        <!-- Strona: Posiłki -->
         <section id="posilki" class="page">
             <div class="card">
                 <h2 class="card-title">📅 Planer Posiłków</h2>
                 <div id="meals-grid"></div>
+                <div class="meal-planner-actions">
+                    <button id="generate-meals-btn" class="btn">Zaproponuj posiłki</button>
+                </div>
             </div>
             <div class="card">
                 <h2 class="card-title">🛒 Lista Zakupów</h2>
                 <textarea id="shopping-list" rows="10" placeholder="Wpisz tutaj produkty..."></textarea>
+                <div class="meal-planner-actions">
+                    <button id="group-shopping-list-btn" class="btn">Grupuj listę</button>
+                </div>
+                <div id="grouped-shopping-list"></div>
             </div>
         </section>
         
-        <!-- NOWA Strona: Nawyki -->
+        <!-- Strona: Nawyki -->
         <section id="nawyki" class="page">
             <div class="card">
                 <h2 class="card-title">💪 Monitor Nawyków</h2>
                 <div id="habits-list"></div>
+                 <button id="add-habit-btn" class="btn" style="margin-top: 1rem;">+ Nowy Nawyk</button>
             </div>
-            <button id="add-habit-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Nawyk</button>
         </section>
 
         <!-- Strona: Pomysły -->
@@ -533,21 +599,21 @@
         <!-- Strona: Rozwój -->
         <section id="rozwoj" class="page">
             <div class="card">
-                <h2 class="card-title">Asystent Celów</h2>
-                <div class="form-group">
-                    <label for="goal-input">Wpisz swój cel, a ja go rozbiję na kroki:</label>
-                    <input type="text" id="goal-input" placeholder="np. Chcę rozwinąć sprzedaż">
-                </div>
-                <button id="generate-steps-btn" class="btn">Generuj Kroki</button>
-                <div id="goal-steps-output" style="margin-top: 1.5rem;"></div>
+                <h2 class="card-title">🌱 Twoje Cele</h2>
+                <div id="goals-list"></div>
+                <button id="add-goal-btn" class="btn" style="margin-top: 1rem;">+ Nowy Cel</button>
             </div>
+        </section>
+        
+        <!-- Strona: Notatnik -->
+        <section id="notatnik" class="page">
             <div class="card">
-                <h2 class="card-title">Edytor Bazy Pomysłów</h2>
-                <p>Dodaj własne pomysły, które będą używane w generatorach.</p>
-                <div class="form-group">
-                    <textarea id="custom-ideas-editor" rows="5"></textarea>
+                <h2 class="card-title">📝 Notatnik / Brain Dump</h2>
+                <p>Zapisz wszystko, co przyjdzie Ci do głowy. Bez oceniania, bez sortowania. Po prostu opróżnij umysł.</p>
+                <div id="notebook-container">
+                    <textarea id="notebook-area" placeholder="Twoje myśli, pomysły, zadania..."></textarea>
+                    <button id="notebook-sorter-btn" class="btn" title="Zrób z tym porządek!">🪄</button>
                 </div>
-                <button id="save-custom-ideas-btn" class="btn">Zapisz pomysły</button>
             </div>
         </section>
     </main>
@@ -561,6 +627,7 @@
         <button class="nav-button" data-page="nawyki"><span class="icon">💪</span><span class="label">Nawyki</span></button>
         <button class="nav-button" data-page="pomysly"><span class="icon">💡</span><span class="label">Pomysły</span></button>
         <button class="nav-button" data-page="rozwoj"><span class="icon">🌱</span><span class="label">Rozwój</span></button>
+        <button class="nav-button" data-page="notatnik"><span class="icon">📝</span><span class="label">Notatnik</span></button>
     </nav>
     
     <!-- Modale -->
@@ -661,8 +728,12 @@
             <form id="health-form">
                  <input type="hidden" id="health-id">
                  <div class="form-group">
-                    <label for="health-date">Data</label>
+                    <label for="health-date">Data wizyty</label>
                     <input type="date" id="health-date" required>
+                </div>
+                 <div class="form-group">
+                    <label for="health-time">Godzina wizyty (opcjonalnie)</label>
+                    <input type="time" id="health-time">
                 </div>
                 <div class="form-group">
                     <label for="health-mood">Nastrój (1-5)</label>
@@ -678,8 +749,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="health-appointment">Termin wizyty lekarskiej (opcjonalnie)</label>
-                    <input type="text" id="health-appointment" placeholder="np. Kardiolog, 15.10, 10:30">
+                    <label for="health-appointment">Opis wizyty (np. Kardiolog)</label>
+                    <input type="text" id="health-appointment" placeholder="np. Kardiolog, kontrola">
                 </div>
                  <div class="form-group">
                     <label for="health-notes">Notatki (np. waga, ciśnienie)</label>
@@ -751,7 +822,40 @@
             </form>
         </div>
     </div>
-
+    
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h3 class="modal-title">Nowy Cel</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="goal-form">
+                <input type="hidden" id="goal-id">
+                <div class="form-group">
+                    <label for="goal-name">Nazwa celu</label>
+                    <input type="text" id="goal-name" required placeholder="np. Rozwinąć sprzedaż w sklepie">
+                </div>
+                <div class="form-group">
+                    <label for="goal-steps-input">Kroki do celu (jeden na linię)</label>
+                    <textarea id="goal-steps-input" rows="5" placeholder="np. Analiza konkurencji..."></textarea>
+                </div>
+                 <div class="form-actions">
+                    <button type="button" id="delete-goal-btn" style="display: none;">🗑️</button>
+                    <button type="submit">🩷</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="weekly-review-modal" class="modal">
+         <div class="modal-content">
+             <div class="modal-header">
+                <h3 class="modal-title">📝 Podsumowanie Tygodnia</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="weekly-review-content"></div>
+        </div>
+    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -766,10 +870,12 @@
                 payments: [],
                 health: [],
                 ideas: [],
+                goals: [],
                 customIdeas: '',
                 wins: {}, // { 'YYYY-MM-DD': ['zwycięstwo 1'] }
-                meals: { shoppingList: '' }, // { 'monday': { breakfast: '', ... }, shoppingList: '' }
+                meals: { shoppingList: '' },
                 habits: [], // { id, name, completed: {'YYYY-MM-DD': true} }
+                notebook: '',
             },
             
             init() {
@@ -784,8 +890,8 @@
             loadState() {
                 const savedState = localStorage.getItem('appState');
                 if (savedState) {
-                    // Łączymy zapisany stan z domyślnym, aby zapewnić istnienie nowych pól
-                    this.state = Object.assign(this.state, JSON.parse(savedState));
+                    const defaultState = JSON.parse(JSON.stringify(this.state));
+                    this.state = Object.assign(defaultState, JSON.parse(savedState));
                 }
             },
             
@@ -803,9 +909,10 @@
                 growth.render();
                 meals.render();
                 habits.render();
+                notebook.render();
             },
 
-            // --- Motyw (ciemny/jasny) ---
+            // --- Motyw ---
             applyTheme() {
                 if (this.state.theme === 'dark') {
                     document.body.classList.add('dark-mode');
@@ -835,14 +942,13 @@
             showModal(modalId) { document.getElementById(modalId).classList.add('visible'); },
             hideModal(modalId) { document.getElementById(modalId).classList.remove('visible'); },
             
-            // --- Alerty ---
             showAlert(title, message) {
                 document.getElementById('alert-title').textContent = title;
                 document.getElementById('alert-message').textContent = message;
                 this.showModal('alert-modal');
             },
             
-            // --- Powiadomienia Web ---
+            // --- Powiadomienia ---
             requestNotificationPermission() {
                 if ('Notification' in window && Notification.permission !== 'granted') {
                     Notification.requestPermission();
@@ -857,28 +963,20 @@
 
             // --- Event Listeners ---
             setupEventListeners() {
-                // Przełącznik motywu
                 document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
 
-                // Nawigacja
                 document.querySelector('.nav-bar').addEventListener('click', (e) => {
                     const button = e.target.closest('.nav-button');
-                    if (button) {
-                        this.navigateTo(button.dataset.page);
-                    }
+                    if (button) this.navigateTo(button.dataset.page);
                 });
 
-                // Zamykanie modali
                 document.querySelectorAll('.modal .close-modal').forEach(btn => {
                     btn.addEventListener('click', () => this.hideModal(btn.closest('.modal').id));
                 });
                 
-                // Zamykanie modali przez kliknięcie tła
                 document.querySelectorAll('.modal').forEach(modal => {
                     modal.addEventListener('click', e => {
-                        if (e.target === modal) {
-                            this.hideModal(modal.id);
-                        }
+                        if (e.target === modal) this.hideModal(modal.id);
                     });
                 });
                 
@@ -888,7 +986,7 @@
                 document.getElementById('add-idea-btn').addEventListener('click', () => ideas.showEditModal());
                 document.getElementById('add-health-btn').addEventListener('click', () => health.showEditModal());
                 document.getElementById('add-habit-btn').addEventListener('click', () => habits.showEditModal());
-
+                document.getElementById('add-goal-btn').addEventListener('click', () => growth.showGoalModal());
 
                 // Formularze
                 document.getElementById('task-form').addEventListener('submit', (e) => tasks.handleSubmit(e));
@@ -897,7 +995,7 @@
                 document.getElementById('health-form').addEventListener('submit', (e) => health.handleSubmit(e));
                 document.getElementById('add-win-form').addEventListener('submit', (e) => pulpit.addWin(e));
                 document.getElementById('habit-form').addEventListener('submit', (e) => habits.handleSubmit(e));
-
+                document.getElementById('goal-form').addEventListener('submit', (e) => growth.handleGoalSubmit(e));
 
                 // Przyciski usuwania
                 document.getElementById('delete-task-btn').addEventListener('click', () => tasks.handleDelete());
@@ -905,11 +1003,7 @@
                 document.getElementById('delete-idea-btn').addEventListener('click', () => ideas.handleDelete());
                 document.getElementById('delete-health-btn').addEventListener('click', () => health.handleDelete());
                 document.getElementById('delete-habit-btn').addEventListener('click', () => habits.handleDelete());
-
-                
-                // Sekcja Rozwój
-                document.getElementById('generate-steps-btn').addEventListener('click', () => growth.generateGoalSteps());
-                document.getElementById('save-custom-ideas-btn').addEventListener('click', () => growth.saveCustomIdeas());
+                document.getElementById('delete-goal-btn').addEventListener('click', () => growth.handleGoalDelete());
                 
                 // Synchronizacja
                 document.getElementById('sync-button').addEventListener('click', () => this.showModal('sync-modal'));
@@ -920,17 +1014,19 @@
 
                 // Nowe Listenery
                 document.getElementById('focus-btn').addEventListener('click', () => focusMode.show());
-                document.getElementById('shopping-list').addEventListener('change', (e) => meals.saveShoppingList(e.target.value));
-
+                document.getElementById('weekly-review-btn').addEventListener('click', () => weeklyReview.show());
+                document.getElementById('shopping-list').addEventListener('input', (e) => meals.saveShoppingList(e.target.value));
+                document.getElementById('group-shopping-list-btn').addEventListener('click', () => meals.groupShoppingList());
+                document.getElementById('generate-meals-btn').addEventListener('click', () => meals.generate());
+                document.getElementById('notebook-area').addEventListener('input', () => notebook.save());
+                document.getElementById('notebook-sorter-btn').addEventListener('click', () => notebook.sort());
             },
             
             // --- Synchronizacja ---
             exportJSON() {
                 const dataStr = JSON.stringify(this.state);
                 const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
-                const exportFileDefaultName = 'wez-sie-do-roboty-data.json';
-                
+                const exportFileDefaultName = 'wizjonerka-data.json';
                 const linkElement = document.createElement('a');
                 linkElement.setAttribute('href', dataUri);
                 linkElement.setAttribute('download', exportFileDefaultName);
@@ -940,14 +1036,12 @@
             importJSON(event) {
                 const file = event.target.files[0];
                 if (!file) return;
-
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     try {
                         const importedState = JSON.parse(e.target.result);
-                        // Walidacja podstawowa
                         if (importedState.tasks && importedState.theme) {
-                            this.state = importedState;
+                            this.state = Object.assign(app.state, importedState);
                             this.saveState();
                             this.applyTheme();
                             this.renderAll();
@@ -956,7 +1050,7 @@
                             throw new Error('Nieprawidłowy format pliku.');
                         }
                     } catch (error) {
-                         this.showAlert('Błąd', 'Nie udało się zaimportować danych. Sprawdź format pliku.');
+                         this.showAlert('Błąd', 'Nie udało się zaimportować danych.');
                     } finally {
                         this.hideModal('sync-modal');
                     }
@@ -968,14 +1062,8 @@
                 const dataStr = JSON.stringify(this.state);
                 const qrContainer = document.getElementById('qr-code-container');
                 qrContainer.innerHTML = '';
-                new QRious({
-                    element: qrContainer,
-                    value: dataStr,
-                    size: 200,
-                    background: 'white',
-                    foreground: 'black'
-                });
-                this.showAlert('Kod QR', 'Funkcja skanowania QR jest w przygotowaniu. Na razie możesz zrobić zrzut ekranu i użyć zewnętrznej aplikacji do odczytu danych.');
+                new QRious({ element: qrContainer, value: dataStr, size: 200 });
+                this.showAlert('Kod QR', 'Funkcja skanowania QR jest w przygotowaniu.');
             }
         };
 
@@ -983,51 +1071,16 @@
         // == Komponent: PULPIT (dashboard.js) ==
         // =================================================================================
         const pulpit = {
-            mottos: [
-                "Jesteś architektem swojego dnia. Zbuduj arcydzieło.",
-                "Mały postęp to wciąż postęp. Idź do przodu.",
-                "Energia podąża za uwagą. Skup się na tym, co ważne.",
-                "Zrobione jest lepsze od doskonałego.",
-                "Pamiętaj, dlaczego zaczęłaś. Twoja pasja jest Twoją siłą."
-            ],
-            strategicGoals: [
-                "UX/UI: Przeanalizuj 1 stronę konkurencji pod kątem użyteczności.",
-                "AI: Poświęć 15 minut na przeczytanie artykułu o nowościach w AI.",
-                "WWW: Naucz się jednej nowej właściwości CSS.",
-                "UX/UI: Zaprojektuj jeden nowy element dla swojej strony.",
-                "AI: Przetestuj jedno narzędzie AI, które może usprawnić Twoją pracę."
-            ],
-            kpiGoals: [
-                "HappyKiddy: Sprawdź statystyki odwiedzin sklepu z wczoraj.",
-                "HappyKiddy: Odpisz na wszystkie komentarze w social media.",
-                "Marketing: Zaplanuj 1 post na Instagram.",
-                "Marketing: Wymyśl hasło do nowej kampanii promocyjnej.",
-                "HappyKiddy: Spakuj i przygotuj do wysyłki 1 zamówienie z uśmiechem."
-            ],
-            selfCareIdeas: [
-                "Zaparz ulubioną herbatę i wypij ją w ciszy.",
-                "Włącz ulubioną piosenkę i potańcz przez 3 minuty.",
-                "Wyjdź na 5-minutowy spacer, żeby odetchnąć świeżym powietrzem.",
-                "Poczytaj książkę przez 10 minut.",
-                "Zrób sobie krótki masaż dłoni z pachnącym kremem."
-            ],
-            cleaningMotivators: [
-                "Uporządkuj biurko. Czysta przestrzeń to czysty umysł.",
-                "Wyrzuć 5 niepotrzebnych rzeczy. Poczuj lekkość!",
-                "Pościel łóżko. To pierwsze małe zwycięstwo dnia.",
-                "Umyj naczynia od razu. Twoje przyszłe 'ja' Ci podziękuje.",
-                "Przetrzyj ekran telefonu i laptopa. Zobacz świat wyraźniej."
-            ],
+            mottos: ["Jesteś architektem swojego dnia.", "Mały postęp to wciąż postęp.", "Energia podąża za uwagą.", "Zrobione jest lepsze od doskonałego.", "Pamiętaj, dlaczego zaczęłaś."],
+            strategicGoals: ["UX/UI: Przeanalizuj 1 stronę konkurencji.", "AI: Poświęć 15 minut na artykuł o AI.", "WWW: Naucz się jednej nowej właściwości CSS.", "UX/UI: Zaprojektuj jeden nowy element.", "AI: Przetestuj jedno narzędzie AI."],
+            kpiGoals: ["HappyKiddy: Sprawdź statystyki odwiedzin.", "HappyKiddy: Odpisz na komentarze.", "Marketing: Zaplanuj 1 post na Instagram.", "Marketing: Wymyśl hasło do kampanii.", "HappyKiddy: Przygotuj 1 zamówienie."],
+            selfCareIdeas: ["Zaparz ulubioną herbatę w ciszy.", "Włącz piosenkę i potańcz.", "Wyjdź na 5-minutowy spacer.", "Poczytaj książkę przez 10 minut.", "Zrób masaż dłoni kremem."],
+            cleaningMotivators: ["Uporządkuj biurko.", "Wyrzuć 5 niepotrzebnych rzeczy.", "Pościel łóżko.", "Umyj naczynia od razu.", "Przetrzyj ekran telefonu/laptopa."],
 
             render() {
                 const today = new Date().toDateString();
-                let dailyData = localStorage.getItem('dailyPulpitData');
-                
-                if (dailyData) {
-                    dailyData = JSON.parse(dailyData);
-                }
+                let dailyData = JSON.parse(localStorage.getItem('dailyPulpitData'));
 
-                // Jeśli nie ma danych lub jest nowy dzień, wygeneruj nowe dane
                 if (!dailyData || dailyData.date !== today) {
                     dailyData = {
                         date: today,
@@ -1040,7 +1093,6 @@
                     localStorage.setItem('dailyPulpitData', JSON.stringify(dailyData));
                 }
                 
-                // Renderowanie danych
                 document.getElementById('daily-motto').textContent = dailyData.motto;
                 document.getElementById('strategic-goals').textContent = dailyData.strategicGoal;
                 document.getElementById('kpi-goals').textContent = dailyData.kpiGoal;
@@ -1059,14 +1111,10 @@
             renderPriorities() {
                 const list = document.getElementById('daily-priorities');
                 list.innerHTML = '';
-                const priorityTasks = app.state.tasks.filter(t => t.quadrant == 1 || t.quadrant == 2).slice(0, 3);
+                const priorityTasks = app.state.tasks.filter(t => !t.completed && (t.quadrant == 1 || t.quadrant == 2)).slice(0, 3);
                 
                 if (priorityTasks.length > 0) {
-                    priorityTasks.forEach(task => {
-                        const p = document.createElement('p');
-                        p.textContent = `• ${task.name}`;
-                        list.appendChild(p);
-                    });
+                    priorityTasks.forEach(task => list.innerHTML += `<p>• ${task.name}</p>`);
                 } else {
                     list.innerHTML = '<p>Brak ważnych zadań. Czas na strategiczne myślenie!</p>';
                 }
@@ -1075,31 +1123,24 @@
             renderUrgentItems() {
                 const paymentsContainer = document.getElementById('urgent-payments');
                 const appointmentsContainer = document.getElementById('upcoming-appointments');
-                paymentsContainer.innerHTML = '';
-                appointmentsContainer.innerHTML = '';
+                paymentsContainer.innerHTML = '<p>Brak pilnych płatności.</p>';
+                appointmentsContainer.innerHTML = '<p>Brak wizyt w najbliższym czasie.</p>';
 
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Ustawiamy na początek dnia
+                today.setHours(0, 0, 0, 0);
                 const twoDaysFromNow = new Date(today);
                 twoDaysFromNow.setDate(today.getDate() + 2);
 
-                // Pilne płatności
                 const urgentPayments = app.state.payments.filter(p => {
                     const paymentDate = new Date(p.date);
                     return p.status !== 'paid' && paymentDate >= today && paymentDate <= twoDaysFromNow;
                 });
 
                 if (urgentPayments.length > 0) {
-                    urgentPayments.forEach(p => {
-                        const pEl = document.createElement('p');
-                        pEl.textContent = `${p.name} - ${p.amount} zł (do ${p.date})`;
-                        paymentsContainer.appendChild(pEl);
-                    });
-                } else {
-                    paymentsContainer.innerHTML = '<p>Brak pilnych płatności. Chwila oddechu!</p>';
+                    paymentsContainer.innerHTML = '';
+                    urgentPayments.forEach(p => paymentsContainer.innerHTML += `<p>${p.name} - ${p.amount} zł</p>`);
                 }
 
-                // Nadchodzące wizyty
                 const upcomingAppointments = app.state.health.filter(h => {
                     if (!h.appointment) return false;
                     const appointmentDate = new Date(h.date);
@@ -1107,31 +1148,23 @@
                 });
                 
                 if (upcomingAppointments.length > 0) {
+                    appointmentsContainer.innerHTML = '';
                     upcomingAppointments.forEach(h => {
-                        const pEl = document.createElement('p');
                         const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
-                        pEl.innerHTML = `${personLabel} ${h.appointment} - ${h.date}`;
-                        appointmentsContainer.appendChild(pEl);
+                        appointmentsContainer.innerHTML += `<p>${personLabel} ${h.appointment} - ${h.date}</p>`;
                     });
-                } else {
-                    appointmentsContainer.innerHTML = '<p>Brak wizyt w najbliższym czasie. Zdrowie dopisuje!</p>';
                 }
             },
 
             renderWins() {
                 const list = document.getElementById('wins-list');
-                list.innerHTML = '';
+                list.innerHTML = '<li>Doceniaj małe sukcesy!</li>';
                 const todayKey = new Date().toISOString().slice(0, 10);
                 const todaysWins = app.state.wins[todayKey] || [];
                 
                 if (todaysWins.length > 0) {
-                    todaysWins.forEach(win => {
-                        const li = document.createElement('li');
-                        li.textContent = win;
-                        list.appendChild(li);
-                    });
-                } else {
-                    list.innerHTML = '<li>Doceniaj małe sukcesy!</li>';
+                    list.innerHTML = '';
+                    todaysWins.forEach(win => list.innerHTML += `<li>${win}</li>`);
                 }
             },
             
@@ -1140,13 +1173,9 @@
                 const input = document.getElementById('win-input');
                 const winText = input.value.trim();
                 if (!winText) return;
-
                 const todayKey = new Date().toISOString().slice(0, 10);
-                if (!app.state.wins[todayKey]) {
-                    app.state.wins[todayKey] = [];
-                }
+                if (!app.state.wins[todayKey]) app.state.wins[todayKey] = [];
                 app.state.wins[todayKey].push(winText);
-                
                 app.saveState();
                 this.renderWins();
                 input.value = '';
@@ -1171,29 +1200,48 @@
             createTaskElement(task) {
                 const div = document.createElement('div');
                 div.className = 'task';
-                if (task.delegated) {
-                    div.classList.add('delegated');
-                }
+                if (task.delegated) div.classList.add('delegated');
+                if (task.completed) div.classList.add('completed');
                 div.draggable = true;
                 div.dataset.id = task.id;
                 div.innerHTML = `
-                    <span>${task.name} ${task.delegated ? '🤝' : ''}</span>
+                    <div class="checkbox-group" style="flex-grow: 1;">
+                         <input type="checkbox" id="cb-${task.id}" ${task.completed ? 'checked' : ''}>
+                         <label for="cb-${task.id}" style="flex-grow: 1;"><span>${task.name} ${task.delegated ? '🤝' : ''}</span></label>
+                    </div>
                     <div class="task-actions">
                         <button class="edit-task">✏️</button>
                     </div>
                 `;
                 div.querySelector('.edit-task').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    this.showEditModal(task.id);
+                    e.stopPropagation(); this.showEditModal(task.id);
                 });
+                div.querySelector(`#cb-${task.id}`).addEventListener('change', () => this.toggleCompleted(task.id));
                 return div;
             },
             
+            toggleCompleted(id) {
+                const task = app.state.tasks.find(t => t.id === id);
+                if(task) {
+                    task.completed = !task.completed;
+                    if(task.completed) {
+                        const winText = `Ukończono zadanie: ${task.name}`;
+                        const todayKey = new Date().toISOString().slice(0, 10);
+                        if (!app.state.wins[todayKey]) app.state.wins[todayKey] = [];
+                        if(!app.state.wins[todayKey].includes(winText)) {
+                           app.state.wins[todayKey].push(winText);
+                        }
+                    }
+                    app.saveState();
+                    this.render();
+                    pulpit.render();
+                }
+            },
+
             showEditModal(id) {
                 const form = document.getElementById('task-form');
                 form.reset();
                 document.getElementById('task-id').value = id || '';
-                
                 const deleteBtn = document.getElementById('delete-task-btn');
                 if (id) {
                     const task = app.state.tasks.find(t => t.id === id);
@@ -1215,149 +1263,94 @@
                 const name = document.getElementById('task-name').value;
                 const quadrant = document.getElementById('task-quadrant').value;
                 const delegated = document.getElementById('task-delegated').checked;
-
-                if (id) { // Edycja
+                if (id) {
                     const task = app.state.tasks.find(t => t.id === id);
-                    task.name = name;
-                    task.quadrant = quadrant;
-                    task.delegated = delegated;
-                } else { // Nowe zadanie
-                    app.state.tasks.push({
-                        id: `task-${Date.now()}`,
-                        name,
-                        quadrant,
-                        delegated
-                    });
+                    task.name = name; task.quadrant = quadrant; task.delegated = delegated;
+                } else {
+                    app.state.tasks.push({ id: `task-${Date.now()}`, name, quadrant, delegated, completed: false });
                 }
-                
-                app.saveState();
-                this.render();
-                pulpit.render(); // Aktualizacja pulpitu
-                app.hideModal('task-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('task-modal');
             },
             
             handleDelete() {
                 const id = document.getElementById('task-id').value;
                 app.state.tasks = app.state.tasks.filter(t => t.id !== id);
-                app.saveState();
-                this.render();
-                pulpit.render();
-                app.hideModal('task-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('task-modal');
             },
             
-            // --- Drag & Drop ---
             setupDragAndDrop() {
-                const tasksEls = document.querySelectorAll('.task');
-                const quadrants = document.querySelectorAll('.quadrant');
-
-                tasksEls.forEach(taskEl => {
-                    taskEl.addEventListener('dragstart', () => {
-                        this.draggedItem = taskEl;
-                        setTimeout(() => taskEl.classList.add('dragging'), 0);
+                document.querySelectorAll('.task').forEach(taskEl => {
+                    taskEl.addEventListener('dragstart', (e) => {
+                         if(e.target.matches('.task')) {
+                             this.draggedItem = e.target;
+                             setTimeout(() => e.target.classList.add('dragging'), 0);
+                         }
                     });
                     taskEl.addEventListener('dragend', () => {
-                        taskEl.classList.remove('dragging');
-                        this.draggedItem = null;
+                        this.draggedItem.classList.remove('dragging'); this.draggedItem = null;
                     });
                 });
-                
-                quadrants.forEach(quadrant => {
-                    quadrant.addEventListener('dragover', e => {
-                        e.preventDefault();
-                    });
+                document.querySelectorAll('.quadrant').forEach(quadrant => {
+                    quadrant.addEventListener('dragover', e => e.preventDefault());
                     quadrant.addEventListener('drop', e => {
                         e.preventDefault();
                         const targetQuadrant = e.target.closest('.quadrant');
-                        if (!targetQuadrant) return;
-
+                        if (!targetQuadrant || !this.draggedItem) return;
                         const draggedId = this.draggedItem.dataset.id;
                         const newQuadrantId = targetQuadrant.dataset.quadrant;
-
+                        
+                        let task;
                         if (draggedId.startsWith('task-')) {
-                            // Przenoszenie zadania
-                            const task = app.state.tasks.find(t => t.id === draggedId);
-                            if (task) {
-                                task.quadrant = newQuadrantId;
-                                app.saveState();
-                                this.render();
-                            }
-                        } else if (draggedId.startsWith('idea-') || draggedId.startsWith('payment-')) {
-                            // Konwersja pomysłu/płatności na zadanie
-                            let name;
-                            if (draggedId.startsWith('idea-')) {
+                            task = app.state.tasks.find(t => t.id === draggedId);
+                        } else {
+                             let name;
+                             if (draggedId.startsWith('idea-')) {
                                 const idea = app.state.ideas.find(i => i.id === draggedId);
                                 name = idea.text;
-                                app.state.ideas = app.state.ideas.filter(i => i.id !== draggedId); // Usuń pomysł
+                                app.state.ideas = app.state.ideas.filter(i => i.id !== draggedId);
                                 ideas.render();
-                            } else {
+                             } else {
                                 const payment = app.state.payments.find(p => p.id === draggedId);
                                 name = `Zapłać: ${payment.name} (${payment.amount} zł)`;
-                            }
-                            
-                            app.state.tasks.push({
-                                id: `task-${Date.now()}`,
-                                name: name,
-                                quadrant: newQuadrantId
-                            });
-                            app.saveState();
-                            this.render();
+                             }
+                             task = { id: `task-${Date.now()}`, name, quadrant: newQuadrantId, completed: false };
+                             app.state.tasks.push(task);
                         }
+                        if (task) task.quadrant = newQuadrantId;
+                        app.saveState(); this.render();
                     });
                 });
             }
         };
 
         // =================================================================================
-        // == Komponent: PŁATNOŚCI (payments.js) ==
+        // == Pozostałe komponenty (Płatności, Zdrowie, Pomysły, Nawyki, Posiłki...)
         // =================================================================================
         const payments = {
             render() {
                 const list = document.getElementById('payments-list');
+                list.innerHTML = '<p>Brak płatności na liście.</p>';
+                if(app.state.payments.length === 0) return;
                 list.innerHTML = '';
-                if(app.state.payments.length === 0) {
-                    list.innerHTML = '<p>Brak płatności na liście. Możesz odetchnąć!</p>';
-                    return;
-                }
-                
-                const sortedPayments = [...app.state.payments].sort((a,b) => new Date(a.date) - new Date(b.date));
-                
-                sortedPayments.forEach(p => {
+                const sorted = [...app.state.payments].sort((a,b) => new Date(a.date) - new Date(b.date));
+                sorted.forEach(p => {
                     const item = document.createElement('div');
                     item.className = 'payment-item';
                     item.dataset.id = p.id;
-                    
-                    const daysDiff = (new Date(p.date) - new Date()) / (1000 * 60 * 60 * 24);
-                    let statusClass = 'status-pending';
-                    let statusText = 'Oczekuje';
-
-                    if (p.status === 'paid') {
-                        statusClass = 'status-paid';
-                        statusText = 'Opłacona';
-                    } else if (daysDiff < 0) {
-                        statusClass = 'status-overdue';
-                        statusText = 'Zaległa';
-                    } else if (daysDiff <= 7) {
-                        statusClass = 'status-approaching';
-                        statusText = 'Zbliża się';
-                    }
-                    
-                    item.innerHTML = `
-                        <div>
-                            <span>${p.name} - <strong>${p.amount} zł</strong> (do ${p.date})</span>
-                            <span class="payment-status ${statusClass}">${statusText}</span>
-                        </div>
-                        <button class="edit-payment">✏️</button>
-                    `;
+                    const daysDiff = (new Date(p.date) - new Date()) / (1000 * 3600 * 24);
+                    let statusClass = 'status-pending', statusText = 'Oczekuje';
+                    if (p.status === 'paid') { statusClass = 'status-paid'; statusText = 'Opłacona'; }
+                    else if (daysDiff < 0) { statusClass = 'status-overdue'; statusText = 'Zaległa'; }
+                    else if (daysDiff <= 7) { statusClass = 'status-approaching'; statusText = 'Zbliża się'; }
+                    item.innerHTML = `<div><span>${p.name} - <strong>${p.amount} zł</strong> (do ${p.date})</span><span class="payment-status ${statusClass}">${statusText}</span></div><button class="edit-payment">✏️</button>`;
                     item.querySelector('.edit-payment').addEventListener('click', () => this.showEditModal(p.id));
                     list.appendChild(item);
                 });
             },
-            
-             showEditModal(id) {
+            showEditModal(id) {
                 const form = document.getElementById('payment-form');
                 form.reset();
                 document.getElementById('payment-id').value = id || '';
-                
                 const deleteBtn = document.getElementById('delete-payment-btn');
                 if (id) {
                     const p = app.state.payments.find(p => p.id === id);
@@ -1371,123 +1364,69 @@
                 }
                 app.showModal('payment-modal');
             },
-            
             handleSubmit(e) {
                 e.preventDefault();
-                const id = document.getElementById('payment-id').value;
-                const name = document.getElementById('payment-name').value;
-                const amount = document.getElementById('payment-amount').value;
-                const date = document.getElementById('payment-date').value;
-                const status = document.getElementById('payment-status').value;
-
+                const id = document.getElementById('payment-id').value, name = document.getElementById('payment-name').value, amount = document.getElementById('payment-amount').value, date = document.getElementById('payment-date').value, status = document.getElementById('payment-status').value;
                 if (id) {
                     const p = app.state.payments.find(p => p.id === id);
-                    p.name = name;
-                    p.amount = amount;
-                    p.date = date;
-                    p.status = status;
+                    Object.assign(p, { name, amount, date, status });
                 } else {
                     app.state.payments.push({ id: `payment-${Date.now()}`, name, amount, date, status });
-                    app.sendNotification('Nowa płatność', `Pamiętaj o terminie płatności za ${name} do dnia ${date}.`);
+                    app.sendNotification('Nowa płatność', `Pamiętaj o terminie za ${name} do ${date}.`);
                 }
-                
-                app.saveState();
-                this.render();
-                pulpit.render();
-                app.hideModal('payment-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('payment-modal');
             },
-            
             handleDelete() {
-                 const id = document.getElementById('payment-id').value;
+                const id = document.getElementById('payment-id').value;
                 app.state.payments = app.state.payments.filter(p => p.id !== id);
-                app.saveState();
-                this.render();
-                pulpit.render();
-                app.hideModal('payment-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('payment-modal');
             }
         };
 
-        // =================================================================================
-        // == Komponent: ZDROWIE (health.js) ==
-        // =================================================================================
         const health = {
-            render() {
+             render() {
                 const list = document.getElementById('health-list');
+                list.innerHTML = '<p>Brak wpisów.</p>';
+                if (app.state.health.length === 0) return;
                 list.innerHTML = '';
-                if (app.state.health.length === 0) {
-                    list.innerHTML = '<p>Brak wpisów. Dodaj pierwszy, by śledzić swoje samopoczucie.</p>';
-                    return;
-                }
-
-                // Sort entries by date, newest first
-                const sortedHealth = [...app.state.health].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                // Group entries by date string
-                const groupedByDate = sortedHealth.reduce((acc, entry) => {
+                const sorted = [...app.state.health].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const grouped = sorted.reduce((acc, entry) => {
                     const dateStr = new Date(entry.date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-                    if (!acc[dateStr]) {
-                        acc[dateStr] = [];
-                    }
+                    if (!acc[dateStr]) acc[dateStr] = [];
                     acc[dateStr].push(entry);
                     return acc;
                 }, {});
-
-                // Render grouped entries
-                for (const dateStr in groupedByDate) {
-                    const dateHeader = document.createElement('h3');
-                    dateHeader.textContent = dateStr;
-                    list.appendChild(dateHeader);
-
-                    const entriesForDay = groupedByDate[dateStr];
-                    entriesForDay.forEach(h => {
-                        const item = document.createElement('div');
-                        item.className = 'health-item';
-
+                for (const dateStr in grouped) {
+                    list.innerHTML += `<h3>${dateStr}</h3>`;
+                    grouped[dateStr].forEach(h => {
                         let appointmentHTML = '';
                         if (h.appointment && h.appointment.trim() !== '') {
                             const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
-                            appointmentHTML = `
-                                <div class="appointment-details">
-                                    ${personLabel}
-                                    <span class="appointment-info">🩺 ${h.appointment}</span>
-                                </div>
-                            `;
+                            const calendarBtn = `<button class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;" onclick="health.addToCalendar('${h.id}')">🗓️</button>`;
+                            appointmentHTML = `<div class="appointment-details">${personLabel}<span class="appointment-info">🩺 ${h.appointment} o ${h.time || ''}</span>${calendarBtn}</div>`;
                         }
-                        
-                        let notesHTML = '';
-                        if (h.notes && h.notes.trim() !== '') {
-                            notesHTML = `<p class="health-notes">${h.notes}</p>`;
-                        }
-
-                        item.innerHTML = `
-                            <div class="health-content">
-                                ${appointmentHTML}
-                                <div class="mood-details">
-                                    <strong>Nastrój: ${'😊'.repeat(h.mood)}</strong>
-                                </div>
-                                ${notesHTML}
-                            </div>
-                            <button class="edit-health" data-id="${h.id}">✏️</button>
-                        `;
+                        const notesHTML = (h.notes && h.notes.trim() !== '') ? `<p class="health-notes">${h.notes}</p>` : '';
+                        const item = document.createElement('div');
+                        item.className = 'health-item';
+                        item.innerHTML = `<div class="health-content">${appointmentHTML}<div class="mood-details"><strong>Nastrój: ${'😊'.repeat(h.mood)}</strong></div>${notesHTML}</div><button class="edit-health">✏️</button>`;
                         item.querySelector('.edit-health').addEventListener('click', () => this.showEditModal(h.id));
                         list.appendChild(item);
                     });
                 }
             },
-            
             showEditModal(id) {
                 const form = document.getElementById('health-form');
                 form.reset();
                 document.getElementById('health-id').value = id || '';
-                
                 const deleteBtn = document.getElementById('delete-health-btn');
                 if (id) {
                     const h = app.state.health.find(h => h.id === id);
                     document.getElementById('health-date').value = h.date;
+                    document.getElementById('health-time').value = h.time || '';
                     document.getElementById('health-mood').value = h.mood;
                     document.getElementById('health-person').value = h.person || 'Karolina';
                     document.getElementById('health-appointment').value = h.appointment || '';
-                    document.getElementById('health-notes').value = h.notes;
+                    document.getElementById('health-notes').value = h.notes || '';
                     deleteBtn.style.display = 'inline-block';
                 } else {
                     document.getElementById('health-date').valueAsDate = new Date();
@@ -1495,325 +1434,331 @@
                 }
                 app.showModal('health-modal');
             },
-            
             handleSubmit(e) {
                 e.preventDefault();
                 const id = document.getElementById('health-id').value;
-                const date = document.getElementById('health-date').value;
-                const mood = document.getElementById('health-mood').value;
-                const person = document.getElementById('health-person').value;
-                const appointment = document.getElementById('health-appointment').value;
-                const notes = document.getElementById('health-notes').value;
-
+                const data = {
+                    date: document.getElementById('health-date').value,
+                    time: document.getElementById('health-time').value,
+                    mood: document.getElementById('health-mood').value,
+                    person: document.getElementById('health-person').value,
+                    appointment: document.getElementById('health-appointment').value,
+                    notes: document.getElementById('health-notes').value
+                };
                 if (id) {
                     const h = app.state.health.find(h => h.id === id);
-                    h.date = date;
-                    h.mood = mood;
-                    h.person = person;
-                    h.appointment = appointment;
-                    h.notes = notes;
+                    Object.assign(h, data);
                 } else {
-                    app.state.health.push({ id: `health-${Date.now()}`, date, mood, person, appointment, notes });
+                    app.state.health.push({ id: `health-${Date.now()}`, ...data });
                 }
-                
-                app.saveState();
-                this.render();
-                pulpit.render();
-                app.hideModal('health-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('health-modal');
             },
-            
             handleDelete() {
                 const id = document.getElementById('health-id').value;
                 app.state.health = app.state.health.filter(h => h.id !== id);
-                app.saveState();
-                this.render();
-                app.hideModal('health-modal');
+                app.saveState(); this.render(); pulpit.render(); app.hideModal('health-modal');
+            },
+            addToCalendar(id) {
+                const h = app.state.health.find(h => h.id === id);
+                if (!h || !h.appointment) return;
+                const [year, month, day] = h.date.split('-');
+                const [hour, minute] = (h.time || '00:00').split(':');
+                const startDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+                const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1h duration
+                const toICSFormat = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                const icsContent = [
+                    'BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT',
+                    `SUMMARY:Wizyta: ${h.appointment} (${h.person})`,
+                    `DTSTART:${toICSFormat(startDate)}`,
+                    `DTEND:${toICSFormat(endDate)}`,
+                    'END:VEVENT', 'END:VCALENDAR'
+                ].join('\n');
+                const blob = new Blob([icsContent], { type: 'text/calendar' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `wizyta_${h.person}.ics`;
+                link.click();
             }
         };
 
-        // =================================================================================
-        // == Komponent: POMYSŁY (ideas.js) ==
-        // =================================================================================
         const ideas = {
             render() {
                 const list = document.getElementById('ideas-list');
+                list.innerHTML = '<p>Głowa pusta? Czas na kawę!</p>';
+                if(app.state.ideas.length === 0) return;
                 list.innerHTML = '';
-                 if(app.state.ideas.length === 0) {
-                    list.innerHTML = '<p>Głowa pusta? Czas na kawę! A potem dodaj tu swoje genialne pomysły.</p>';
-                    return;
-                }
                 app.state.ideas.forEach(idea => {
                     const item = document.createElement('div');
-                    item.className = 'idea-item task'; // Używamy klasy task dla drag&drop
+                    item.className = 'idea-item task';
                     item.draggable = true;
                     item.dataset.id = idea.id;
-                    item.innerHTML = `
-                        <span>${idea.text}</span>
-                        <button class="edit-idea">✏️</button>
-                    `;
+                    item.innerHTML = `<span>${idea.text}</span><button class="edit-idea">✏️</button>`;
                     item.querySelector('.edit-idea').addEventListener('click', () => this.showEditModal(idea.id));
                     list.appendChild(item);
                 });
-                // Ponowne ustawienie Drag and Drop po renderowaniu pomysłów
                 tasks.setupDragAndDrop();
             },
-            
-             showEditModal(id) {
-                const form = document.getElementById('idea-form');
+            showEditModal(id) {
+                const form = document.getElementById('idea-form'), deleteBtn = document.getElementById('delete-idea-btn');
                 form.reset();
                 document.getElementById('idea-id').value = id || '';
-                
-                const deleteBtn = document.getElementById('delete-idea-btn');
                 if (id) {
-                    const idea = app.state.ideas.find(i => i.id === id);
-                    document.getElementById('idea-text').value = idea.text;
+                    document.getElementById('idea-text').value = app.state.ideas.find(i => i.id === id).text;
                     deleteBtn.style.display = 'inline-block';
                 } else {
                     deleteBtn.style.display = 'none';
                 }
                 app.showModal('idea-modal');
             },
-            
             handleSubmit(e) {
                 e.preventDefault();
-                const id = document.getElementById('idea-id').value;
-                const text = document.getElementById('idea-text').value;
-
-                if (id) {
-                    const idea = app.state.ideas.find(i => i.id === id);
-                    idea.text = text;
-                } else {
-                    app.state.ideas.push({ id: `idea-${Date.now()}`, text });
-                }
-                
-                app.saveState();
-                this.render();
-                app.hideModal('idea-modal');
+                const id = document.getElementById('idea-id').value, text = document.getElementById('idea-text').value;
+                if (id) app.state.ideas.find(i => i.id === id).text = text;
+                else app.state.ideas.push({ id: `idea-${Date.now()}`, text });
+                app.saveState(); this.render(); app.hideModal('idea-modal');
             },
-            
             handleDelete() {
                 const id = document.getElementById('idea-id').value;
                 app.state.ideas = app.state.ideas.filter(i => i.id !== id);
+                app.saveState(); this.render(); app.hideModal('idea-modal');
+            }
+        };
+
+        const growth = {
+            goalStepsDB: { "sprzedaż": ["Analiza konkurencji", "Nowa oferta promocyjna", "Zwiększenie budżetu na reklamy"], "marketing": ["Zaplanowanie kalendarza postów", "Kampania email marketingowa", "Nagraj rolkę na Instagram"], "nauka": ["Wybierz kurs online", "Poświęć 30 min dziennie", "Znajdź mentora"], "organizacja": ["Posprzątaj biurko", "Lista priorytetów na tydzień", "Deleguj jedno zadanie"] },
+            render() {
+                const list = document.getElementById('goals-list');
+                list.innerHTML = '<p>Brak zdefiniowanych celów. Czas zacząć!</p>';
+                if (app.state.goals.length === 0) return;
+                list.innerHTML = '';
+                app.state.goals.forEach(goal => {
+                    const completedSteps = goal.steps.filter(s => s.completed).length;
+                    const progress = (completedSteps / goal.steps.length) * 100 || 0;
+                    const item = document.createElement('div');
+                    item.className = 'goal-item';
+                    let stepsHTML = goal.steps.map((step, index) => `
+                        <div class="goal-step">
+                           <input type="checkbox" id="gs-${goal.id}-${index}" ${step.completed ? 'checked' : ''} onchange="growth.toggleStep('${goal.id}', ${index})">
+                           <label for="gs-${goal.id}-${index}">${step.text}</label>
+                        </div>`).join('');
+                    item.innerHTML = `
+                        <h4>${goal.name} <button onclick="growth.showGoalModal('${goal.id}')">✏️</button></h4>
+                        <progress value="${progress}" max="100"></progress>
+                        <div>${stepsHTML}</div>`;
+                    list.appendChild(item);
+                });
+            },
+            showGoalModal(id) {
+                const form = document.getElementById('goal-form');
+                form.reset();
+                document.getElementById('goal-id').value = id || '';
+                const deleteBtn = document.getElementById('delete-goal-btn');
+                if (id) {
+                    const goal = app.state.goals.find(g => g.id === id);
+                    document.getElementById('goal-name').value = goal.name;
+                    document.getElementById('goal-steps-input').value = goal.steps.map(s => s.text).join('\n');
+                    deleteBtn.style.display = 'inline-block';
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
+                app.showModal('goal-modal');
+            },
+            handleGoalSubmit(e) {
+                e.preventDefault();
+                const id = document.getElementById('goal-id').value;
+                const name = document.getElementById('goal-name').value;
+                const stepsText = document.getElementById('goal-steps-input').value;
+                const steps = stepsText.split('\n').filter(s => s.trim() !== '').map(text => ({ text, completed: false }));
+
+                if (id) {
+                    const goal = app.state.goals.find(g => g.id === id);
+                    goal.name = name;
+                    goal.steps = stepsText.split('\n').filter(s => s.trim() !== '').map(text => {
+                        const existingStep = goal.steps.find(s => s.text === text);
+                        return existingStep || { text, completed: false };
+                    });
+                } else {
+                    app.state.goals.push({ id: `goal-${Date.now()}`, name, steps });
+                }
                 app.saveState();
                 this.render();
-                app.hideModal('idea-modal');
-            }
-        };
-
-        // =================================================================================
-        // == Komponent: ROZWÓJ (growth.js) ==
-        // =================================================================================
-        const growth = {
-             goalStepsDB: {
-                "sprzedaż": ["Analiza konkurencji", "Stworzenie nowej oferty promocyjnej", "Zwiększenie budżetu na reklamy", "Nawiązanie współpracy z influencerem"],
-                "marketing": ["Zaplanowanie kalendarza postów na miesiąc", "Stworzenie kampanii email marketingowej", "Nagraj rolkę na Instagram", "Przeprowadź ankietę wśród klientów"],
-                "nauka": ["Wybierz kurs online", "Poświęć 30 minut dziennie na naukę", "Znajdź mentora", "Przeczytak książkę branżową"],
-                "organizacja": ["Posprzątaj biurko", "Zrób listę priorytetów na tydzień", "Przetestuj nową aplikację do zarządzania czasem", "Deleguj jedno zadanie"]
+                app.hideModal('goal-modal');
             },
-            
-            render() {
-                document.getElementById('custom-ideas-editor').value = app.state.customIdeas || '';
-            },
-
-            generateGoalSteps() {
-                const input = document.getElementById('goal-input').value.toLowerCase();
-                const output = document.getElementById('goal-steps-output');
-                output.innerHTML = '';
-
-                let steps = [];
-                for (const key in this.goalStepsDB) {
-                    if (input.includes(key)) {
-                        steps = this.goalStepsDB[key];
-                        break;
-                    }
-                }
-
-                if (steps.length > 0) {
-                    const ul = document.createElement('ul');
-                    steps.forEach(step => {
-                        const li = document.createElement('li');
-                        li.textContent = step;
-                        ul.appendChild(li);
-                    });
-                    output.appendChild(ul);
-                } else {
-                    output.innerHTML = '<p>Nie mam gotowego planu na ten cel. Spróbuj ująć to inaczej, np. "rozwój sprzedaży", "lepsza organizacja".</p>';
-                }
-            },
-            
-            saveCustomIdeas() {
-                app.state.customIdeas = document.getElementById('custom-ideas-editor').value;
+            handleGoalDelete() {
+                const id = document.getElementById('goal-id').value;
+                app.state.goals = app.state.goals.filter(g => g.id !== id);
                 app.saveState();
-                app.showAlert('Zapisano!', 'Twoja baza pomysłów została zaktualizowana.');
-            }
-        };
-
-        // =================================================================================
-        // == NOWE KOMPONENTY ==
-        // =================================================================================
-
-        const focusMode = {
-            timerInterval: null,
-            timeLeft: 25 * 60,
-            isRunning: false,
-            
-            show() {
-                this.reset();
-                app.showModal('focus-modal');
-                document.getElementById('focus-start-stop').addEventListener('click', () => this.toggle());
-                document.getElementById('focus-close').addEventListener('click', () => this.hide());
+                this.render();
+                app.hideModal('goal-modal');
             },
-            
-            hide() {
-                this.stop();
-                app.hideModal('focus-modal');
-            },
-
-            toggle() {
-                this.isRunning ? this.stop() : this.start();
-            },
-
-            start() {
-                this.isRunning = true;
-                document.getElementById('focus-start-stop').textContent = 'Pauza';
-                this.timerInterval = setInterval(() => {
-                    this.timeLeft--;
-                    this.updateDisplay();
-                    if (this.timeLeft <= 0) {
-                        this.stop();
-                        app.sendNotification('Koniec!', 'Czas na przerwę! Świetna robota!');
-                        // Dźwięk powiadomienia
-                        new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"+Array(300).join("12345678")).play();
-                    }
-                }, 1000);
-            },
-            
-            stop() {
-                this.isRunning = false;
-                document.getElementById('focus-start-stop').textContent = 'Start';
-                clearInterval(this.timerInterval);
-            },
-            
-            reset() {
-                this.stop();
-                this.timeLeft = 25 * 60;
-                this.updateDisplay();
-            },
-            
-            updateDisplay() {
-                const minutes = Math.floor(this.timeLeft / 60).toString().padStart(2, '0');
-                const seconds = (this.timeLeft % 60).toString().padStart(2, '0');
-                document.getElementById('focus-timer').textContent = `${minutes}:${seconds}`;
+            toggleStep(goalId, stepIndex) {
+                const goal = app.state.goals.find(g => g.id === goalId);
+                if (goal) {
+                    goal.steps[stepIndex].completed = !goal.steps[stepIndex].completed;
+                    app.saveState();
+                    this.render();
+                }
             }
         };
 
         const meals = {
             days: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'],
-            
+            mealIdeas: { breakfast: ['Owsianka', 'Jajecznica', 'Kanapki z awokado'], lunch: ['Kurczak z ryżem', 'Zupa pomidorowa', 'Sałatka grecka'], dinner: ['Zapiekanka', 'Lekka sałatka', 'Wrapy z kurczakiem'] },
+            shoppingCategories: { 'Nabiał': ['mleko', 'ser', 'jajka', 'jogurt', 'masło', 'twaróg'], 'Warzywa': ['pomidor', 'ogórek', 'cebula', 'sałata', 'ziemniaki', 'marchew'], 'Owoce': ['banan', 'jabłko', 'cytryna', 'pomarańcza'], 'Mięso': ['kurczak', 'szynka', 'boczek', 'indyk'], 'Pieczywo': ['chleb', 'bułki'], 'Produkty sypkie': ['ryż', 'makaron', 'kasza', 'mąka', 'cukier'] },
             render() {
                 const grid = document.getElementById('meals-grid');
                 grid.innerHTML = '';
                 this.days.forEach(day => {
-                    const dayCard = document.createElement('div');
-                    dayCard.className = 'meal-day-card';
-                    const dayKey = day.toLowerCase();
-                    dayCard.innerHTML = `
-                        <h4>${day}</h4>
-                        <input type="text" data-day="${dayKey}" data-meal="breakfast" placeholder="Śniadanie" value="${app.state.meals[dayKey]?.breakfast || ''}">
-                        <input type="text" data-day="${dayKey}" data-meal="lunch" placeholder="Obiad" value="${app.state.meals[dayKey]?.lunch || ''}">
-                        <input type="text" data-day="${dayKey}" data-meal="dinner" placeholder="Kolacja" value="${app.state.meals[dayKey]?.dinner || ''}">
-                    `;
-                    grid.appendChild(dayCard);
+                    const dayKey = day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    grid.innerHTML += `<div class="meal-day-card"><h4>${day}</h4><input data-day="${dayKey}" data-meal="breakfast" placeholder="Śniadanie" value="${app.state.meals[dayKey]?.breakfast || ''}"><input data-day="${dayKey}" data-meal="lunch" placeholder="Obiad" value="${app.state.meals[dayKey]?.lunch || ''}"><input data-day="${dayKey}" data-meal="dinner" placeholder="Kolacja" value="${app.state.meals[dayKey]?.dinner || ''}"></div>`;
                 });
-
                 document.getElementById('shopping-list').value = app.state.meals.shoppingList || '';
-
-                grid.querySelectorAll('input').forEach(input => {
-                    input.addEventListener('change', (e) => this.saveMeal(e.target));
-                });
+                grid.querySelectorAll('input').forEach(input => input.addEventListener('change', (e) => this.saveMeal(e.target)));
             },
-            
+            generate() {
+                this.days.forEach(day => {
+                    const dayKey = day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    if (!app.state.meals[dayKey]) app.state.meals[dayKey] = {};
+                    app.state.meals[dayKey].breakfast = pulpit.getRandomItem(this.mealIdeas.breakfast);
+                    app.state.meals[dayKey].lunch = pulpit.getRandomItem(this.mealIdeas.lunch);
+                    app.state.meals[dayKey].dinner = pulpit.getRandomItem(this.mealIdeas.dinner);
+                });
+                app.saveState(); this.render(); app.showAlert("Gotowe!", "Jadłospis na tydzień został wygenerowany.");
+            },
             saveMeal(input) {
                 const { day, meal } = input.dataset;
-                if (!app.state.meals[day]) {
-                    app.state.meals[day] = {};
-                }
+                if (!app.state.meals[day]) app.state.meals[day] = {};
                 app.state.meals[day][meal] = input.value;
                 app.saveState();
             },
-            
             saveShoppingList(value) {
-                app.state.meals.shoppingList = value;
-                app.saveState();
+                app.state.meals.shoppingList = value; app.saveState();
+            },
+            groupShoppingList() {
+                const list = app.state.meals.shoppingList.toLowerCase().split('\n').filter(i => i.trim() !== '');
+                const grouped = { 'Inne': [] };
+                list.forEach(item => {
+                    let found = false;
+                    for (const category in this.shoppingCategories) {
+                        if (this.shoppingCategories[category].some(keyword => item.includes(keyword))) {
+                            if (!grouped[category]) grouped[category] = [];
+                            grouped[category].push(item);
+                            found = true; break;
+                        }
+                    }
+                    if (!found) grouped['Inne'].push(item);
+                });
+                const container = document.getElementById('grouped-shopping-list');
+                container.innerHTML = '';
+                for (const category in grouped) {
+                    if (grouped[category].length > 0) {
+                        container.innerHTML += `<h4>${category}</h4><ul>${grouped[category].map(i => `<li>${i}</li>`).join('')}</ul>`;
+                    }
+                }
             }
         };
 
         const habits = {
-            render() {
+             render() {
                 const list = document.getElementById('habits-list');
+                list.innerHTML = '<p>Zacznij od jednego małego nawyku.</p>';
+                if (app.state.habits.length === 0) return;
                 list.innerHTML = '';
-                 if (app.state.habits.length === 0) {
-                    list.innerHTML = '<p>Zacznij od jednego małego nawyku. Zobaczysz, jaką zrobi różnicę!</p>';
-                    return;
-                }
-
                 const todayKey = new Date().toISOString().slice(0, 10);
-
                 app.state.habits.forEach(habit => {
-                    const item = document.createElement('div');
-                    item.className = 'habit-item';
                     const isCompleted = habit.completed && habit.completed[todayKey];
-
-                    item.innerHTML = `
-                        <label for="habit-${habit.id}">${habit.name}</label>
-                        <input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}>
-                    `;
-                    item.querySelector('input').addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id));
-                    list.appendChild(item);
+                    list.innerHTML += `<div class="habit-item"><label for="habit-${habit.id}">${habit.name}</label><input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}></div>`;
                 });
+                list.querySelectorAll('input').forEach(cb => cb.addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id)));
             },
-
-            showEditModal(id) {
-                // Ta funkcja może być rozbudowana o edycję, na razie tylko dodaje
-                document.getElementById('habit-form').reset();
-                app.showModal('habit-modal');
-            },
-
+            showEditModal() { document.getElementById('habit-form').reset(); app.showModal('habit-modal'); },
             handleSubmit(e) {
                 e.preventDefault();
                 const name = document.getElementById('habit-name').value.trim();
-                if (!name) return;
-
-                app.state.habits.push({
-                    id: `habit-${Date.now()}`,
-                    name: name,
-                    completed: {}
-                });
-
-                app.saveState();
-                this.render();
-                app.hideModal('habit-modal');
+                if (name) app.state.habits.push({ id: `habit-${Date.now()}`, name, completed: {} });
+                app.saveState(); this.render(); app.hideModal('habit-modal');
             },
-            
-            handleDelete() {
-                // Do implementacji
-            },
-
+            handleDelete() { /* Do implementacji */ },
             toggleComplete(id) {
                 const habit = app.state.habits.find(h => h.id === id);
                 if (!habit) return;
-
                 const todayKey = new Date().toISOString().slice(0, 10);
-                if (!habit.completed) {
-                    habit.completed = {};
-                }
-
+                if (!habit.completed) habit.completed = {};
                 habit.completed[todayKey] = !habit.completed[todayKey];
                 app.saveState();
-                this.render();
+            }
+        };
+        
+        const notebook = {
+            render() { document.getElementById('notebook-area').value = app.state.notebook || ''; },
+            save() { app.state.notebook = document.getElementById('notebook-area').value; app.saveState(); },
+            sort() {
+                const text = app.state.notebook;
+                const lines = text.split('\n').filter(l => l.trim() !== '');
+                const sorted = { tasks: [], ideas: [] };
+                lines.forEach(line => {
+                    if (/kupić|zrobić|zadanie|zapłacić/i.test(line)) {
+                        sorted.tasks.push(line);
+                    } else {
+                        sorted.ideas.push(line);
+                    }
+                });
+                if(confirm(`Znaleziono ${sorted.tasks.length} potencjalnych zadań i ${sorted.ideas.length} pomysłów. Czy chcesz je dodać do odpowiednich sekcji i wyczyścić notatnik?`)) {
+                    sorted.tasks.forEach(name => app.state.tasks.push({ id: `task-${Date.now()}`, name, quadrant: 4, completed: false }));
+                    sorted.ideas.forEach(text => app.state.ideas.push({ id: `idea-${Date.now()}`, text }));
+                    app.state.notebook = '';
+                    app.saveState();
+                    app.renderAll();
+                    app.showAlert("Gotowe!", "Notatki zostały posortowane.");
+                }
             }
         };
 
+        const weeklyReview = {
+            show() {
+                const content = document.getElementById('weekly-review-content');
+                const today = new Date();
+                const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+                
+                // Zwycięstwa
+                let winsCount = 0;
+                for(const dateKey in app.state.wins) {
+                    const date = new Date(dateKey);
+                    if(date >= lastWeek && date <= today) {
+                        winsCount += app.state.wins[dateKey].length;
+                    }
+                }
+
+                // Nawyki
+                let habitsCompleted = 0;
+                let habitsTotal = 0;
+                app.state.habits.forEach(habit => {
+                     for(const dateKey in habit.completed) {
+                         const date = new Date(dateKey);
+                         if(date >= lastWeek && date <= today) {
+                             habitsTotal++;
+                             if(habit.completed[dateKey]) habitsCompleted++;
+                         }
+                     }
+                });
+                const habitSuccessRate = habitsTotal > 0 ? ((habitsCompleted / habitsTotal) * 100).toFixed(0) : 0;
+                
+                // Zadania
+                const tasksLastWeek = app.state.tasks.filter(t => t.id.split('-')[1] > lastWeek.getTime());
+                const tasksCompleted = tasksLastWeek.filter(t => t.completed).length;
+                
+                content.innerHTML = `
+                    <h4>Twoje postępy w ostatnim tygodniu:</h4>
+                    <p>🏆 Odnotowałaś <strong>${winsCount}</strong> zwycięstw. Brawo!</p>
+                    <p>✅ Ukończyłaś <strong>${tasksCompleted}</strong> z ${tasksLastWeek.length} nowych zadań.</p>
+                    <p>💪 Realizacja nawyków na poziomie <strong>${habitSuccessRate}%</strong>.</p>
+                    <hr>
+                    <h4>Refleksja:</h4>
+                    <p>Co poszło dobrze? Co można poprawić w nadchodzącym tygodniu?</p>
+                `;
+                app.showModal('weekly-review-modal');
+            }
+        };
 
         // Inicjalizacja Aplikacji
         app.init();
@@ -1821,4 +1766,5 @@
     </script>
 </body>
 </html>
+
 
