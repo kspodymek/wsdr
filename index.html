@@ -303,29 +303,33 @@
         .person-Karolina { background-color: #e1bee7; color: #3d2247; }
         .person-Tomek { background-color: #c8e6c9; color: #254a26; }
 
-        #priority-card {
+        /* --- NOWE: Karta Fokus Dnia --- */
+        #focus-card {
             background: linear-gradient(135deg, var(--c-peach), var(--c-lavender));
             color: #3d2247;
-            transform: scale(1.02);
+            grid-column: 1 / -1; /* Zajmuje całą szerokość */
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
-        #priority-card .card-title {
+        #focus-card .card-title {
             font-size: 1.5rem;
+            border-bottom: 2px solid rgba(255,255,255,0.5);
+            padding-bottom: 0.5rem;
         }
-
-        body.dark-mode #priority-card {
+        
+        #focus-card h3 { margin-top: 1rem; margin-bottom: 0.5rem; }
+        #focus-card p { font-size: 1.1em; }
+        
+        body.dark-mode #focus-card {
             background: linear-gradient(135deg, #4a4a6a, #383854);
             color: var(--text-dark);
             border: 1px solid var(--c-mint);
         }
-
-        #daily-priorities p {
-            font-size: 1.1em;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+        
+        body.dark-mode #focus-card .card-title {
+            border-bottom-color: var(--c-mint);
         }
-
+        
         /* Sekcja Zdrowia */
         #health-list h3 {
             margin-top: 1.5rem;
@@ -412,8 +416,10 @@
         }
 
         .habit-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 0.5rem; margin-bottom: 0.5rem; }
-        .habit-item label { font-weight: 500; }
-        .habit-item input[type="checkbox"] { width: 20px; height: 20px; }
+        .habit-item label { font-weight: 500; flex-grow: 1; }
+        .habit-item input[type="checkbox"] { width: 20px; height: 20px; margin-left: 1rem; }
+        /* --- NOWE: Styl dla licznika streaka --- */
+        .habit-streak { font-weight: 700; color: var(--c-orange); }
         
         #notebook-container { position: relative; }
         #notebook-area {
@@ -455,6 +461,32 @@
             margin-bottom: 0.25rem;
         }
         
+        /* --- NOWE: Puste Stany --- */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.7;
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- NOWE: Mikrointerakcje i Animacje --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .new-item-animation { animation: fadeIn 0.5s ease forwards; }
+        
+        @keyframes tada {
+            from { transform: scale3d(1, 1, 1); }
+            10%, 20% { transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg); }
+            30%, 50%, 70%, 90% { transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg); }
+            40%, 60%, 80% { transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg); }
+            to { transform: scale3d(1, 1, 1); }
+        }
+        .task.completed, .habit-item.completed {
+            animation: tada 0.8s;
+        }
+        
         /* --- Responsywność --- */
         @media (max-width: 768px) {
             .app-title { font-size: 1.5rem; }
@@ -476,17 +508,17 @@
     </header>
 
     <main>
-        <!-- Strona: Pulpit -->
         <section id="pulpit" class="page active">
             <div class="card-title">
                 <h2>Witaj, Karolka!</h2>
                 <button id="weekly-review-btn" class="btn">Review Tygodnia</button>
             </div>
             <div class="grid-container">
-                <div class="card" id="priority-card">
-                    <h2 class="card-title">⭐ Priorytety na dziś</h2>
-                    <div id="daily-priorities"></div>
+                <div class="card" id="focus-card">
+                    <h2 class="card-title">⭐ Fokus Dnia</h2>
+                    <div id="daily-focus-content"></div>
                 </div>
+                
                 <div class="card">
                     <h2 class="card-title">🏆 Dzisiejsze Zwycięstwa</h2>
                     <ul id="wins-list"></ul>
@@ -494,14 +526,6 @@
                         <input type="text" id="win-input" placeholder="Co Ci się dziś udało?" required>
                         <button type="submit">➕</button>
                     </form>
-                </div>
-                <div class="card">
-                    <h2 class="card-title">💡 Motto na dziś</h2>
-                    <p id="daily-motto"></p>
-                </div>
-                <div class="card">
-                    <h2 class="card-title">🎯 Cele Strategiczne i Operacyjne</h2>
-                    <p id="strategic-goals"></p>
                 </div>
                 <div class="card">
                     <h2 class="card-title">📈 Wzrost Sklepu i Marketing</h2>
@@ -526,7 +550,6 @@
             </div>
         </section>
 
-        <!-- Strona: Zadania -->
         <section id="zadania" class="page">
             <div id="eisenhower-matrix">
                 <div class="quadrant" id="q1" data-quadrant="1">
@@ -549,7 +572,6 @@
             <button id="add-task-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Zadanie</button>
         </section>
 
-        <!-- Strona: Płatności -->
         <section id="platnosci" class="page">
              <div class="card">
                 <h2 class="card-title">Twoje płatności</h2>
@@ -558,7 +580,6 @@
             <button id="add-payment-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Płatność</button>
         </section>
 
-        <!-- Strona: Zdrowie -->
         <section id="zdrowie" class="page">
              <div class="card">
                 <h2 class="card-title">Monitor Zdrowia</h2>
@@ -567,7 +588,6 @@
             <button id="add-health-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Wpis</button>
         </section>
         
-        <!-- Strona: Posiłki -->
         <section id="posilki" class="page">
             <div class="card">
                 <h2 class="card-title">📅 Planer Posiłków</h2>
@@ -586,7 +606,6 @@
             </div>
         </section>
         
-        <!-- Strona: Nawyki -->
         <section id="nawyki" class="page">
             <div class="card">
                 <h2 class="card-title">💪 Monitor Nawyków</h2>
@@ -595,7 +614,6 @@
             </div>
         </section>
 
-        <!-- Strona: Pomysły -->
         <section id="pomysly" class="page">
              <div class="card">
                 <h2 class="card-title">Twoje pomysły</h2>
@@ -604,7 +622,6 @@
             <button id="add-idea-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">💡 Szybki pomysł</button>
         </section>
 
-        <!-- Strona: Cele (dawniej Rozwój) -->
         <section id="cele" class="page">
             <div class="card">
                 <h2 class="card-title">🌱 Twoje Cele</h2>
@@ -613,7 +630,6 @@
             </div>
         </section>
         
-        <!-- Strona: Notatnik -->
         <section id="notatnik" class="page">
             <div class="card">
                 <h2 class="card-title">📝 Magiczny Notatnik</h2>
@@ -638,7 +654,6 @@
         <button class="nav-button" data-page="notatnik"><span class="icon">📝</span><span class="label">Notatnik</span></button>
     </nav>
     
-    <!-- Modale -->
     <div id="task-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -803,7 +818,6 @@
         </div>
     </div>
     
-    <!-- NOWE MODALE -->
     <div id="focus-modal" class="modal">
         <div class="modal-content">
             <h3 class="modal-title">Czas na skupienie!</h3>
@@ -1076,59 +1090,77 @@
                     };
                     localStorage.setItem('dailyPulpitData', JSON.stringify(dailyData));
                 }
-                document.getElementById('daily-motto').textContent = dailyData.motto;
-                document.getElementById('strategic-goals').textContent = dailyData.strategicGoal;
+                
                 document.getElementById('kpi-goals').textContent = dailyData.kpiGoal;
                 document.getElementById('self-care-idea').textContent = dailyData.selfCare;
                 document.getElementById('cleaning-motivator').textContent = dailyData.cleaning;
-                this.renderPriorities();
+                this.renderFocus(dailyData.motto, dailyData.strategicGoal);
                 this.renderUrgentItems();
                 this.renderWins();
             },
+            
             getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
-            renderPriorities() {
-                const list = document.getElementById('daily-priorities');
-                list.innerHTML = '';
-                const priorityTasks = app.state.tasks.filter(t => !t.completed && (t.quadrant == 1 || t.quadrant == 2)).slice(0, 3);
-                if (priorityTasks.length > 0) priorityTasks.forEach(task => list.innerHTML += `<p>• ${task.name}</p>`);
-                else list.innerHTML = '<p>Brak ważnych zadań.</p>';
+
+            renderFocus(motto, strategicGoal) {
+                const container = document.getElementById('daily-focus-content');
+                const priorityTask = app.state.tasks.find(t => !t.completed && t.quadrant == 1);
+                
+                let taskHTML = '<h3>✅ Główne Zadanie:</h3>';
+                if (priorityTask) {
+                    taskHTML += `<p>${priorityTask.name}</p>`;
+                } else {
+                    taskHTML += `<p>Brak pilnych i ważnych zadań. Dobra robota!</p>`;
+                }
+                
+                const mottoHTML = `<h3>💡 Motto:</h3><p>${motto}</p>`;
+                const goalHTML = `<h3>🎯 Cel Strategiczny:</h3><p>${strategicGoal}</p>`;
+
+                container.innerHTML = `${taskHTML}${goalHTML}${mottoHTML}`;
             },
+            
             renderUrgentItems() {
                 const paymentsContainer = document.getElementById('urgent-payments');
                 const appointmentsContainer = document.getElementById('upcoming-appointments');
-                paymentsContainer.innerHTML = '<p>Brak pilnych płatności.</p>';
-                appointmentsContainer.innerHTML = '<p>Brak wizyt w najbliższym czasie.</p>';
                 const today = new Date(); today.setHours(0, 0, 0, 0);
                 const twoDaysFromNow = new Date(today); twoDaysFromNow.setDate(today.getDate() + 2);
+                
                 const urgentPayments = app.state.payments.filter(p => {
                     const paymentDate = new Date(p.date);
                     return p.status !== 'paid' && paymentDate >= today && paymentDate <= twoDaysFromNow;
                 });
+                
                 if (urgentPayments.length > 0) {
                     paymentsContainer.innerHTML = '';
                     urgentPayments.forEach(p => paymentsContainer.innerHTML += `<p>${p.name} - ${p.amount} zł</p>`);
+                } else {
+                    paymentsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎉</div>Brak pilnych płatności.</div>`;
                 }
+                
                 const upcomingAppointments = app.state.health.filter(h => {
                     if (!h.appointment) return false;
                     const appointmentDate = new Date(h.date);
                     return appointmentDate >= today && appointmentDate <= twoDaysFromNow;
                 });
+                
                 if (upcomingAppointments.length > 0) {
                     appointmentsContainer.innerHTML = '';
                     upcomingAppointments.forEach(h => {
                         const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
                         appointmentsContainer.innerHTML += `<p>${personLabel} ${h.appointment} - ${h.date}</p>`;
                     });
+                } else {
+                    appointmentsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👍</div>Brak nadchodzących wizyt.</div>`;
                 }
             },
             renderWins() {
                 const list = document.getElementById('wins-list');
-                list.innerHTML = '<li>Doceniaj małe sukcesy!</li>';
                 const todayKey = new Date().toISOString().slice(0, 10);
                 const todaysWins = app.state.wins[todayKey] || [];
                 if (todaysWins.length > 0) {
                     list.innerHTML = '';
                     todaysWins.forEach(win => list.innerHTML += `<li>${win}</li>`);
+                } else {
+                     list.innerHTML = `<div class="empty-state">Każdy mały sukces się liczy! Zapisz go tutaj.</div>`;
                 }
             },
             addWin(e) {
@@ -1142,6 +1174,8 @@
                 app.saveState();
                 this.renderWins();
                 input.value = '';
+                const newItem = document.getElementById('wins-list').lastChild;
+                if(newItem) newItem.classList.add('new-item-animation');
             }
         };
 
@@ -1152,10 +1186,17 @@
             draggedItem: null,
             render() {
                 document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
-                app.state.tasks.forEach(task => {
-                    const taskEl = this.createTaskElement(task);
-                    document.querySelector(`#q${task.quadrant} .task-list`).appendChild(taskEl);
-                });
+                const quadrants = { q1: [], q2: [], q3: [], q4: [] };
+                app.state.tasks.forEach(task => quadrants[`q${task.quadrant}`].push(task));
+
+                for(const key in quadrants) {
+                    const container = document.querySelector(`#${key} .task-list`);
+                    if(quadrants[key].length > 0) {
+                         quadrants[key].forEach(task => container.appendChild(this.createTaskElement(task)));
+                    } else {
+                        container.innerHTML = `<div class="empty-state" style="font-size: 0.8em; padding: 1rem;">Wrzuć tu zadania</div>`;
+                    }
+                }
                 this.setupDragAndDrop();
             },
             createTaskElement(task) {
@@ -1180,11 +1221,12 @@
                         <button class="edit-task">✏️</button>
                     </div>`;
                 div.querySelector('.edit-task').addEventListener('click', (e) => { e.stopPropagation(); this.showEditModal(task.id); });
-                div.querySelector(`#cb-${task.id}`).addEventListener('change', () => this.toggleCompleted(task.id));
+                div.querySelector(`#cb-${task.id}`).addEventListener('change', (e) => this.toggleCompleted(task.id, e.target));
                 return div;
             },
-            toggleCompleted(id) {
+            toggleCompleted(id, checkbox) {
                 const task = app.state.tasks.find(t => t.id === id);
+                const taskElement = checkbox.closest('.task');
                 if(task) {
                     task.completed = !task.completed;
                     if(task.completed) {
@@ -1192,8 +1234,13 @@
                         const todayKey = new Date().toISOString().slice(0, 10);
                         if (!app.state.wins[todayKey]) app.state.wins[todayKey] = [];
                         if(!app.state.wins[todayKey].includes(winText)) app.state.wins[todayKey].push(winText);
+                        taskElement.classList.add('completed');
+                    } else {
+                        taskElement.classList.remove('completed');
                     }
-                    app.saveState(); this.render(); pulpit.render();
+                    app.saveState(); 
+                    // Opóźnione renderowanie dla animacji
+                    setTimeout(() => { this.render(); pulpit.render(); }, 800);
                 }
             },
             showEditModal(id) {
@@ -1228,9 +1275,13 @@
                     const task = app.state.tasks.find(t => t.id === id);
                     Object.assign(task, data);
                 } else {
-                    app.state.tasks.push({ id: `task-${Date.now()}`, ...data, completed: false });
+                    const newId = `task-${Date.now()}`;
+                    app.state.tasks.push({ id: newId, ...data, completed: false });
                 }
                 app.saveState(); this.render(); pulpit.render(); app.hideModal('task-modal');
+                // Animacja
+                const newTaskEl = document.querySelector(`[data-id="task-${id}"]`);
+                if(newTaskEl) newTaskEl.classList.add('new-item-animation');
             },
             handleDelete() {
                 const id = document.getElementById('task-id').value;
@@ -1292,8 +1343,10 @@
         const payments = {
             render() {
                 const list = document.getElementById('payments-list');
-                list.innerHTML = '<p>Brak płatności na liście.</p>';
-                if(app.state.payments.length === 0) return;
+                if(app.state.payments.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💸</div>Dodaj płatności, aby o niczym nie zapomnieć.</div>`;
+                    return;
+                }
                 list.innerHTML = '';
                 const sorted = [...app.state.payments].sort((a,b) => new Date(a.date) - new Date(b.date));
                 sorted.forEach(p => {
@@ -1343,16 +1396,16 @@
         const health = {
              render() {
                 const list = document.getElementById('health-list');
-                list.innerHTML = '<p>Brak wpisów.</p>';
-                if (app.state.health.length === 0) return;
+                if (app.state.health.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❤️</div>Dbaj o zdrowie swoje i rodziny, dodając tu wpisy.</div>`;
+                    return;
+                }
                 list.innerHTML = '';
                 
                 const today = new Date(); today.setHours(0,0,0,0);
                 const upcoming = app.state.health.filter(h => new Date(h.date) >= today).sort((a,b) => new Date(a.date) - new Date(b.date));
                 const past = app.state.health.filter(h => new Date(h.date) < today).sort((a,b) => new Date(b.date) - new Date(a.date));
                 
-                const sortedHealth = [...upcoming, ...past];
-
                 if (upcoming.length > 0) list.innerHTML += `<h3>Nadchodzące</h3>`;
                 upcoming.forEach((h, index) => {
                     const item = this.createHealthItem(h);
@@ -1426,8 +1479,10 @@
         const ideas = {
             render() {
                 const list = document.getElementById('ideas-list');
-                list.innerHTML = '<p>Głowa pusta? Czas na kawę!</p>';
-                if(app.state.ideas.length === 0) return;
+                if(app.state.ideas.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💡</div>Głowa pusta? Czas na kawę! Zapisz tu swoje olśnienia.</div>`;
+                    return;
+                }
                 list.innerHTML = '';
                 app.state.ideas.forEach(idea => {
                     const item = document.createElement('div');
@@ -1465,8 +1520,10 @@
         const growth = {
             render() {
                 const list = document.getElementById('goals-list');
-                list.innerHTML = '<p>Brak zdefiniowanych celów. Czas zacząć!</p>';
-                if (app.state.goals.length === 0) return;
+                 if (app.state.goals.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🌱</div>Zdefiniuj swoje cele, aby śledzić postępy.</div>`;
+                    return;
+                }
                 list.innerHTML = '';
                 app.state.goals.forEach(goal => {
                     const completedSteps = goal.steps.filter(s => s.completed).length;
@@ -1572,13 +1629,41 @@
         const habits = {
              render() {
                 const list = document.getElementById('habits-list');
-                list.innerHTML = '<p>Zacznij od jednego małego nawyku.</p>'; if (app.state.habits.length === 0) return;
-                list.innerHTML = ''; const todayKey = new Date().toISOString().slice(0, 10);
+                if (app.state.habits.length === 0) {
+                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💪</div>Zacznij od jednego małego nawyku.</div>`;
+                    return;
+                }
+                list.innerHTML = ''; 
+                const todayKey = new Date().toISOString().slice(0, 10);
                 app.state.habits.forEach(habit => {
                     const isCompleted = habit.completed && habit.completed[todayKey];
-                    list.innerHTML += `<div class="habit-item"><label for="habit-${habit.id}">${habit.name}</label><input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}></div>`;
+                    const streak = this.calculateStreak(habit.id);
+                    const streakHTML = streak > 1 ? `<span class="habit-streak">🔥 ${streak} dni</span>` : '';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'habit-item';
+                    item.innerHTML = `<label for="habit-${habit.id}">${habit.name}</label> ${streakHTML} <input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}>`;
+                    item.querySelector('input').addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id));
+                    list.appendChild(item);
                 });
-                list.querySelectorAll('input').forEach(cb => cb.addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id)));
+            },
+            calculateStreak(habitId) {
+                const habit = app.state.habits.find(h => h.id === habitId);
+                if (!habit || !habit.completed) return 0;
+                
+                let streak = 0;
+                let date = new Date();
+                
+                while (true) {
+                    const dateKey = date.toISOString().slice(0, 10);
+                    if (habit.completed[dateKey]) {
+                        streak++;
+                        date.setDate(date.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                return streak;
             },
             showEditModal() { document.getElementById('habit-form').reset(); app.showModal('habit-modal'); },
             handleSubmit(e) {
@@ -1593,6 +1678,7 @@
                 if (!habit.completed) habit.completed = {};
                 habit.completed[todayKey] = !habit.completed[todayKey];
                 app.saveState();
+                this.render(); // Re-render to update streak
             }
         };
         const notebook = {
@@ -1664,4 +1750,3 @@
     </script>
 </body>
 </html>
-
