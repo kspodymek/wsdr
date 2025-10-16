@@ -95,6 +95,7 @@
             align-items: center;
             width: 100%;
             flex-shrink: 0;
+            transition: transform 0.3s ease-in-out;
         }
 
         .app-title {
@@ -120,7 +121,7 @@
         .page.active { display: block; }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
@@ -134,6 +135,8 @@
             -webkit-backdrop-filter: blur(10px);
             transition: var(--transition);
             border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
         }
         .card-title {
             font-weight: 600;
@@ -159,6 +162,7 @@
             align-items: center;
             border-top: 1px solid rgba(0,0,0,0.05);
             z-index: 100;
+            transition: transform 0.3s ease-in-out;
         }
         .nav-button {
             background: none;
@@ -303,33 +307,6 @@
         .person-Karolina { background-color: #e1bee7; color: #3d2247; }
         .person-Tomek { background-color: #c8e6c9; color: #254a26; }
 
-        /* --- NOWE: Karta Fokus Dnia --- */
-        #focus-card {
-            background: linear-gradient(135deg, var(--c-peach), var(--c-lavender));
-            color: #3d2247;
-            grid-column: 1 / -1; /* Zajmuje całą szerokość */
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-
-        #focus-card .card-title {
-            font-size: 1.5rem;
-            border-bottom: 2px solid rgba(255,255,255,0.5);
-            padding-bottom: 0.5rem;
-        }
-        
-        #focus-card h3 { margin-top: 1rem; margin-bottom: 0.5rem; }
-        #focus-card p { font-size: 1.1em; }
-        
-        body.dark-mode #focus-card {
-            background: linear-gradient(135deg, #4a4a6a, #383854);
-            color: var(--text-dark);
-            border: 1px solid var(--c-mint);
-        }
-        
-        body.dark-mode #focus-card .card-title {
-            border-bottom-color: var(--c-mint);
-        }
-        
         /* Sekcja Zdrowia */
         #health-list h3 {
             margin-top: 1.5rem;
@@ -399,14 +376,9 @@
         #focus-timer { font-size: 5rem; font-weight: 700; margin: 2rem 0; }
         
         #wins-list li { margin-bottom: 0.5rem; }
-        #add-win-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        #add-win-form { display: flex; gap: 0.5rem; margin-top: auto; } /* ZMIANA: marginTop auto */
         #add-win-form input { flex-grow: 1; }
         #add-win-form button { padding: 0.8rem; border-radius: 0.5rem; background-color: var(--c-peach); }
-        
-        #meals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-        .meal-day-card { background-color: rgba(0,0,0,0.02); padding: 1rem; border-radius: 0.5rem; }
-        .meal-day-card h4 { margin-top: 0; }
-        .meal-day-card input { margin-bottom: 0.5rem; }
         
         .meal-planner-actions {
             margin-top: 1rem;
@@ -414,12 +386,6 @@
             gap: 1rem;
             justify-content: center;
         }
-
-        .habit-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 0.5rem; margin-bottom: 0.5rem; }
-        .habit-item label { font-weight: 500; flex-grow: 1; }
-        .habit-item input[type="checkbox"] { width: 20px; height: 20px; margin-left: 1rem; }
-        /* --- NOWE: Styl dla licznika streaka --- */
-        .habit-streak { font-weight: 700; color: var(--c-orange); }
         
         #notebook-container { position: relative; }
         #notebook-area {
@@ -448,7 +414,7 @@
             border-radius: 0.5rem;
             margin-bottom: 1rem;
         }
-        .goal-item h4 { margin-top: 0; }
+        .goal-item h4 { margin-top: 0; display: flex; justify-content: space-between; align-items: center;}
         .goal-item progress {
             width: 100%;
             height: 10px;
@@ -461,31 +427,45 @@
             margin-bottom: 0.25rem;
         }
         
-        /* --- NOWE: Puste Stany --- */
-        .empty-state {
-            text-align: center;
-            padding: 2rem;
-            opacity: 0.7;
+        /* NOWA SEKCJA: CHECKLISTA */
+        #checklist-list .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(0,0,0,0.02);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
         }
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        #checklist-list .checklist-item.completed label {
+            text-decoration: line-through;
+            opacity: 0.6;
         }
+        #checklist-list .checklist-item label { flex-grow: 1; margin-left: 0.5rem;}
+        #add-checklist-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        #add-checklist-form input { flex-grow: 1; }
+        #add-checklist-form button { padding: 0.8rem; border-radius: 0.5rem; background-color: var(--c-peach); }
 
-        /* --- NOWE: Mikrointerakcje i Animacje --- */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .new-item-animation { animation: fadeIn 0.5s ease forwards; }
-        
-        @keyframes tada {
-            from { transform: scale3d(1, 1, 1); }
-            10%, 20% { transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg); }
-            30%, 50%, 70%, 90% { transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg); }
-            40%, 60%, 80% { transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg); }
-            to { transform: scale3d(1, 1, 1); }
+        /* ZMIANA: Style dla Trybu Zen */
+        body.zen-mode header { transform: translateY(-120%); }
+        body.zen-mode .nav-bar { transform: translateY(120%); }
+        body.zen-mode main { padding-bottom: 1.5rem; }
+        #exit-zen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--c-peach);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1100;
+            display: none; /* Ukryty domyślnie */
         }
-        .task.completed, .habit-item.completed {
-            animation: tada 0.8s;
-        }
+        body.zen-mode #exit-zen-btn { display: block; }
+
         
         /* --- Responsywność --- */
         @media (max-width: 768px) {
@@ -501,6 +481,7 @@
     <header>
         <h1 class="app-title">Weź się do roboty</h1>
         <div class="header-actions">
+            <button id="zen-mode-btn" title="Tryb Zen">👁️</button>
             <button id="focus-btn" title="Tryb Skupienia">🎯</button>
             <button id="theme-toggle" title="Zmień motyw">🌙</button>
             <button id="sync-button" title="Synchronizuj">🔄</button>
@@ -509,48 +490,63 @@
 
     <main>
         <section id="pulpit" class="page active">
-            <div class="card-title">
+             <div class="card-title">
                 <h2>Witaj, Karolka!</h2>
                 <button id="weekly-review-btn" class="btn">Review Tygodnia</button>
             </div>
             <div class="grid-container">
-                <div class="card" id="focus-card">
-                    <h2 class="card-title">⭐ Fokus Dnia</h2>
-                    <div id="daily-focus-content"></div>
-                </div>
-                
                 <div class="card">
-                    <h2 class="card-title">🏆 Dzisiejsze Zwycięstwa</h2>
-                    <ul id="wins-list"></ul>
+                    <h2 class="card-title">⭐ Priorytety</h2>
+                    <div id="daily-priorities"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🏆 Zwycięstwa</h2>
+                    <ul id="wins-list" style="padding-left: 20px; flex-grow: 1;"></ul>
                     <form id="add-win-form">
                         <input type="text" id="win-input" placeholder="Co Ci się dziś udało?" required>
                         <button type="submit">➕</button>
                     </form>
                 </div>
+                 <div class="card">
+                    <h2 class="card-title">💡 Motto</h2>
+                    <p id="daily-motto"></p>
+                </div>
                 <div class="card">
-                    <h2 class="card-title">📈 Wzrost Sklepu i Marketing</h2>
+                    <h2 class="card-title">🚀 Cel na dziś</h2>
+                    <p id="daily-goal-proposal"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🎯 Zad. strategiczne</h2>
+                    <p id="strategic-goals"></p>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">📈 Zad. operacyjne</h2>
                     <p id="kpi-goals"></p>
                 </div>
                 <div class="card">
-                    <h2 class="card-title">💖 Przyjemność dla mnie</h2>
+                    <h2 class="card-title">💖 Dla Ciebie</h2>
                     <p id="self-care-idea"></p>
                 </div>
                 <div class="card">
-                    <h2 class="card-title">🧹 Motywator sprzątania</h2>
+                    <h2 class="card-title">🧹 Dla Domu</h2>
                     <p id="cleaning-motivator"></p>
                 </div>
                  <div class="card">
-                    <h2 class="card-title">⏰ Pilne płatności (2 dni)</h2>
+                    <h2 class="card-title">⏰ Pilne płatności</h2>
                     <div id="urgent-payments"></div>
                 </div>
                 <div class="card">
-                    <h2 class="card-title">🩺 Nadchodzące wizyty (2 dni)</h2>
+                    <h2 class="card-title">🩺 Nadchodzące wizyty</h2>
                     <div id="upcoming-appointments"></div>
                 </div>
             </div>
         </section>
 
         <section id="zadania" class="page">
+            <h2 class="card-title" style="padding: 0 1rem;">
+                Macierz Zadań
+                <button id="sync-tasks-gcal-btn" class="btn">🗓️ Synchronizuj</button>
+            </h2>
             <div id="eisenhower-matrix">
                 <div class="quadrant" id="q1" data-quadrant="1">
                     <h3 class="quadrant-title">🔴 Pilne i Ważne</h3>
@@ -582,7 +578,10 @@
 
         <section id="zdrowie" class="page">
              <div class="card">
-                <h2 class="card-title">Monitor Zdrowia</h2>
+                <h2 class="card-title">
+                    Monitor Zdrowia
+                    <button id="sync-health-gcal-btn" class="btn">🗓️ Synchronizuj</button>
+                </h2>
                 <div id="health-list"></div>
             </div>
             <button id="add-health-btn" class="btn" style="position: fixed; bottom: 80px; right: 20px;">+ Wpis</button>
@@ -590,11 +589,8 @@
         
         <section id="posilki" class="page">
             <div class="card">
-                <h2 class="card-title">📅 Planer Posiłków</h2>
-                <div id="meals-grid"></div>
-                <div class="meal-planner-actions">
-                    <button id="generate-meals-btn" class="btn">Zaproponuj posiłki</button>
-                </div>
+                <h2 class="card-title">💡 Inspiracje kulinarne na dziś</h2>
+                <div id="daily-meal-ideas"></div>
             </div>
             <div class="card">
                 <h2 class="card-title">🛒 Lista Zakupów</h2>
@@ -606,11 +602,15 @@
             </div>
         </section>
         
-        <section id="nawyki" class="page">
+        <section id="checklista" class="page">
             <div class="card">
-                <h2 class="card-title">💪 Monitor Nawyków</h2>
-                <div id="habits-list"></div>
-                 <button id="add-habit-btn" class="btn" style="margin-top: 1rem;">+ Nowy Nawyk</button>
+                <h2 class="card-title">📋 Checklista Dnia</h2>
+                <p>Prosta lista zadań do odhaczenia. Dane resetują się o północy.</p>
+                <div id="checklist-list"></div>
+                <form id="add-checklist-form">
+                    <input type="text" id="checklist-input" placeholder="Dodaj zadanie do checklisty..." required>
+                    <button type="submit">➕</button>
+                </form>
             </div>
         </section>
 
@@ -635,7 +635,7 @@
                 <h2 class="card-title">📝 Magiczny Notatnik</h2>
                 <p>Zapisz wszystko, co przyjdzie Ci do głowy. Kliknij 🪄 aby asystent posortował notatki za Ciebie.</p>
                 <div id="notebook-container">
-                    <textarea id="notebook-area" placeholder="Twoje myśli, pomysły, zadania..."></textarea>
+                    <textarea id="notebook-area" placeholder="Twoje myśli, pomysły, zadania... np. 'wizyta Zosi u lekarza jutro o 10', 'kupić mleko', 'zapłacić fakturę do piątku'"></textarea>
                     <button id="notebook-sorter-btn" class="btn" title="Zrób z tym porządek!">🪄</button>
                 </div>
             </div>
@@ -648,12 +648,14 @@
         <button class="nav-button" data-page="platnosci"><span class="icon">💰</span><span class="label">Płatności</span></button>
         <button class="nav-button" data-page="zdrowie"><span class="icon">❤️</span><span class="label">Zdrowie</span></button>
         <button class="nav-button" data-page="posilki"><span class="icon">🍴</span><span class="label">Posiłki</span></button>
-        <button class="nav-button" data-page="nawyki"><span class="icon">💪</span><span class="label">Nawyki</span></button>
+        <button class="nav-button" data-page="checklista"><span class="icon">📋</span><span class="label">Checklista</span></button>
         <button class="nav-button" data-page="pomysly"><span class="icon">💡</span><span class="label">Pomysły</span></button>
         <button class="nav-button" data-page="cele"><span class="icon">🌱</span><span class="label">Cele</span></button>
         <button class="nav-button" data-page="notatnik"><span class="icon">📝</span><span class="label">Notatnik</span></button>
     </nav>
     
+    <button id="exit-zen-btn" title="Wyjdź z Trybu Zen">👁️</button>
+
     <div id="task-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -690,7 +692,6 @@
             </form>
         </div>
     </div>
-
     <div id="payment-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -705,7 +706,7 @@
                 </div>
                 <div class="form-group">
                     <label for="payment-amount">Kwota</label>
-                    <input type="number" id="payment-amount" required>
+                    <input type="number" id="payment-amount" step="0.01" required>
                 </div>
                  <div class="form-group">
                     <label for="payment-date">Termin</label>
@@ -725,7 +726,6 @@
             </form>
         </div>
     </div>
-    
     <div id="idea-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -745,7 +745,6 @@
             </form>
         </div>
     </div>
-    
     <div id="health-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -790,7 +789,6 @@
             </form>
         </div>
     </div>
-
     <div id="sync-modal" class="modal">
         <div class="modal-content">
              <div class="modal-header">
@@ -807,7 +805,6 @@
             <button id="generate-qr-btn" class="btn">Generuj QR</button>
         </div>
     </div>
-    
     <div id="alert-modal" class="modal">
         <div class="modal-content">
              <div class="modal-header">
@@ -817,7 +814,6 @@
             <p id="alert-message"></p>
         </div>
     </div>
-    
     <div id="focus-modal" class="modal">
         <div class="modal-content">
             <h3 class="modal-title">Czas na skupienie!</h3>
@@ -828,27 +824,6 @@
             </div>
         </div>
     </div>
-
-    <div id="habit-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Nowy nawyk</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="habit-form">
-                <input type="hidden" id="habit-id">
-                <div class="form-group">
-                    <label for="habit-name">Nazwa nawyku</label>
-                    <input type="text" id="habit-name" required placeholder="np. Pij wodę">
-                </div>
-                <div class="form-actions">
-                    <button type="button" id="delete-habit-btn" style="display: none;">🗑️</button>
-                    <button type="submit">🩷</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
     <div id="goal-modal" class="modal">
         <div class="modal-content">
              <div class="modal-header">
@@ -872,7 +847,6 @@
             </form>
         </div>
     </div>
-    
     <div id="weekly-review-modal" class="modal">
          <div class="modal-content">
              <div class="modal-header">
@@ -897,10 +871,9 @@
                 health: [],
                 ideas: [],
                 goals: [],
-                customIdeas: '',
                 wins: {},
                 meals: { shoppingList: '' },
-                habits: [],
+                checklist: { date: '', items: [] }, 
                 notebook: '',
             },
             
@@ -932,7 +905,7 @@
                 ideas.render();
                 growth.render();
                 meals.render();
-                habits.render();
+                checklist.render();
                 notebook.render();
             },
 
@@ -950,6 +923,11 @@
                 this.state.theme = this.state.theme === 'light' ? 'dark' : 'light';
                 this.applyTheme();
                 this.saveState();
+            },
+
+            // ZMIANA: Dodano funkcję do Trybu Zen
+            toggleZenMode() {
+                document.body.classList.toggle('zen-mode');
             },
 
             navigateTo(pageId) {
@@ -982,6 +960,10 @@
 
             setupEventListeners() {
                 document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
+                // ZMIANA: Listener dla Trybu Zen
+                document.getElementById('zen-mode-btn').addEventListener('click', () => this.toggleZenMode());
+                document.getElementById('exit-zen-btn').addEventListener('click', () => this.toggleZenMode());
+
                 document.querySelector('.nav-bar').addEventListener('click', (e) => {
                     const button = e.target.closest('.nav-button');
                     if (button) this.navigateTo(button.dataset.page);
@@ -995,20 +977,18 @@
                 document.getElementById('add-payment-btn').addEventListener('click', () => payments.showEditModal());
                 document.getElementById('add-idea-btn').addEventListener('click', () => ideas.showEditModal());
                 document.getElementById('add-health-btn').addEventListener('click', () => health.showEditModal());
-                document.getElementById('add-habit-btn').addEventListener('click', () => habits.showEditModal());
                 document.getElementById('add-goal-btn').addEventListener('click', () => growth.showGoalModal());
                 document.getElementById('task-form').addEventListener('submit', (e) => tasks.handleSubmit(e));
                 document.getElementById('payment-form').addEventListener('submit', (e) => payments.handleSubmit(e));
                 document.getElementById('idea-form').addEventListener('submit', (e) => ideas.handleSubmit(e));
                 document.getElementById('health-form').addEventListener('submit', (e) => health.handleSubmit(e));
                 document.getElementById('add-win-form').addEventListener('submit', (e) => pulpit.addWin(e));
-                document.getElementById('habit-form').addEventListener('submit', (e) => habits.handleSubmit(e));
+                document.getElementById('add-checklist-form').addEventListener('submit', (e) => checklist.addItem(e));
                 document.getElementById('goal-form').addEventListener('submit', (e) => growth.handleGoalSubmit(e));
                 document.getElementById('delete-task-btn').addEventListener('click', () => tasks.handleDelete());
                 document.getElementById('delete-payment-btn').addEventListener('click', () => payments.handleDelete());
                 document.getElementById('delete-idea-btn').addEventListener('click', () => ideas.handleDelete());
                 document.getElementById('delete-health-btn').addEventListener('click', () => health.handleDelete());
-                document.getElementById('delete-habit-btn').addEventListener('click', () => habits.handleDelete());
                 document.getElementById('delete-goal-btn').addEventListener('click', () => growth.handleGoalDelete());
                 document.getElementById('sync-button').addEventListener('click', () => this.showModal('sync-modal'));
                 document.getElementById('export-json-btn').addEventListener('click', () => this.exportJSON());
@@ -1019,9 +999,11 @@
                 document.getElementById('weekly-review-btn').addEventListener('click', () => weeklyReview.show());
                 document.getElementById('shopping-list').addEventListener('input', (e) => meals.saveShoppingList(e.target.value));
                 document.getElementById('group-shopping-list-btn').addEventListener('click', () => meals.groupShoppingList());
-                document.getElementById('generate-meals-btn').addEventListener('click', () => meals.generate());
                 document.getElementById('notebook-area').addEventListener('input', () => notebook.save());
                 document.getElementById('notebook-sorter-btn').addEventListener('click', () => notebook.sort());
+                // ZMIANA: Listener dla synchronizacji z kalendarzem (placeholdery)
+                document.getElementById('sync-tasks-gcal-btn').addEventListener('click', () => this.showAlert('Synchronizacja (Demo)', 'W docelowej wersji tutaj nastąpiłaby synchronizacja zadań z Kalendarzem Google.'));
+                document.getElementById('sync-health-gcal-btn').addEventListener('click', () => this.showAlert('Synchronizacja (Demo)', 'W docelowej wersji tutaj nastąpiłaby synchronizacja wizyt z Kalendarzem Google.'));
                 // Eventy dla Pomodoro
                 document.getElementById('focus-start-stop').addEventListener('click', () => focusMode.toggle());
                 document.getElementById('focus-close').addEventListener('click', () => focusMode.hide());
@@ -1070,11 +1052,12 @@
         // == Komponent: PULPIT ==
         // =================================================================================
         const pulpit = {
-            mottos: ["Jesteś architektem swojego dnia.", "Mały postęp to wciąż postęp.", "Energia podąża za uwagą.", "Zrobione jest lepsze od doskonałego.", "Pamiętaj, dlaczego zaczęłaś."],
-            strategicGoals: ["UX/UI: Przeanalizuj 1 stronę konkurencji.", "AI: Poświęć 15 minut na artykuł o AI.", "WWW: Naucz się jednej nowej właściwości CSS.", "UX/UI: Zaprojektuj jeden nowy element.", "AI: Przetestuj jedno narzędzie AI."],
-            kpiGoals: ["HappyKiddy: Sprawdź statystyki odwiedzin.", "HappyKiddy: Odpisz na komentarze.", "Marketing: Zaplanuj 1 post na Instagram.", "Marketing: Wymyśl hasło do kampanii.", "HappyKiddy: Przygotuj 1 zamówienie."],
-            selfCareIdeas: ["Zaparz ulubioną herbatę w ciszy.", "Włącz piosenkę i potańcz.", "Wyjdź na 5-minutowy spacer.", "Poczytaj książkę przez 10 minut.", "Zrób masaż dłoni kremem."],
-            cleaningMotivators: ["Uporządkuj biurko.", "Wyrzuć 5 niepotrzebnych rzeczy.", "Pościel łóżko.", "Umyj naczynia od razu.", "Przetrzyj ekran telefonu/laptopa."],
+            mottos: ["Jesteś architektem swojego dnia.", "Mały postęp to wciąż postęp.", "Energia podąża za uwagą.", "Zrobione jest lepsze od doskonałego.", "Pamiętaj, dlaczego zaczęłaś.", "Każda podróż zaczyna się od jednego kroku.", "Działaj, zamiast tylko marzyć."],
+            dailyGoalProposals: ["Znajdź i zapisz jeden ciekawy artykuł na temat AI.", "Poświęć 20 minut na naukę nowego zagadnienia z UX/UI.", "Przeanalizuj ścieżkę użytkownika w konkurencyjnym sklepie.", "Zaprojektuj w Figmie jeden mały komponent (np. przycisk, karta produktu).", "Napisz krótki, angażujący tekst do nowego posta w mediach społecznościowych.", "Sprawdź statystyki swojego sklepu i zanotuj jeden kluczowy wniosek."],
+            strategicGoals: ["UX/UI: Przeanalizuj 1 stronę konkurencji pod kątem użyteczności.", "AI: Poświęć 15 minut na artykuł o nowościach w AI.", "WWW: Naucz się jednej nowej właściwości CSS i zastosuj ją w praktyce.", "UX/UI: Naszkicuj przepływ dla nowej funkcji w aplikacji.", "AI: Przetestuj jedno narzędzie AI do generowania grafik lub tekstu."],
+            kpiGoals: ["HappyKiddy: Sprawdź statystyki odwiedzin z ostatniego tygodnia.", "HappyKiddy: Odpisz na wszystkie komentarze i wiadomości.", "Marketing: Zaplanuj 1 angażujący post na Instagram.", "Marketing: Wymyśl chwytliwe hasło do nowej kampanii promocyjnej.", "HappyKiddy: Zoptymalizuj opisy 2 produktów w sklepie pod SEO."],
+            selfCareIdeas: ["Zaparz ulubioną herbatę i wypij ją w całkowitej ciszy.", "Włącz ulubioną piosenkę i potańcz przez 3 minuty.", "Wyjdź na 5-minutowy spacer i skup się na oddechu.", "Poczytaj książkę (niezwiązaną z pracą) przez 10 minut.", "Zrób sobie krótki masaż dłoni nawilżającym kremem.", "Zamknij oczy na minutę i nie myśl o niczym."],
+            cleaningMotivators: ["Uporządkuj swoje biurko – czysta przestrzeń to czysty umysł.", "Wyrzuć 5 niepotrzebnych rzeczy ze swojego otoczenia.", "Pościel łóżko – to małe zwycięstwo na początek dnia.", "Umyj naczynia od razu po posiłku, nie odkładaj na później.", "Przetrzyj ekran telefonu i laptopa.", "Odkurz w jednym, wybranym pomieszczeniu."],
 
             render() {
                 const today = new Date().toDateString();
@@ -1083,6 +1066,7 @@
                     dailyData = {
                         date: today,
                         motto: this.getRandomItem(this.mottos),
+                        dailyGoal: this.getRandomItem(this.dailyGoalProposals),
                         strategicGoal: this.getRandomItem(this.strategicGoals),
                         kpiGoal: this.getRandomItem(this.kpiGoals),
                         selfCare: this.getRandomItem(this.selfCareIdeas),
@@ -1090,77 +1074,60 @@
                     };
                     localStorage.setItem('dailyPulpitData', JSON.stringify(dailyData));
                 }
-                
+                document.getElementById('daily-motto').textContent = dailyData.motto;
+                document.getElementById('daily-goal-proposal').textContent = dailyData.dailyGoal;
+                document.getElementById('strategic-goals').textContent = dailyData.strategicGoal;
                 document.getElementById('kpi-goals').textContent = dailyData.kpiGoal;
                 document.getElementById('self-care-idea').textContent = dailyData.selfCare;
                 document.getElementById('cleaning-motivator').textContent = dailyData.cleaning;
-                this.renderFocus(dailyData.motto, dailyData.strategicGoal);
+                this.renderPriorities();
                 this.renderUrgentItems();
                 this.renderWins();
             },
-            
             getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; },
-
-            renderFocus(motto, strategicGoal) {
-                const container = document.getElementById('daily-focus-content');
-                const priorityTask = app.state.tasks.find(t => !t.completed && t.quadrant == 1);
-                
-                let taskHTML = '<h3>✅ Główne Zadanie:</h3>';
-                if (priorityTask) {
-                    taskHTML += `<p>${priorityTask.name}</p>`;
-                } else {
-                    taskHTML += `<p>Brak pilnych i ważnych zadań. Dobra robota!</p>`;
-                }
-                
-                const mottoHTML = `<h3>💡 Motto:</h3><p>${motto}</p>`;
-                const goalHTML = `<h3>🎯 Cel Strategiczny:</h3><p>${strategicGoal}</p>`;
-
-                container.innerHTML = `${taskHTML}${goalHTML}${mottoHTML}`;
+            renderPriorities() {
+                const list = document.getElementById('daily-priorities');
+                list.innerHTML = '';
+                const priorityTasks = app.state.tasks.filter(t => !t.completed && (t.quadrant == 1 || t.quadrant == 2)).slice(0, 3);
+                if (priorityTasks.length > 0) priorityTasks.forEach(task => list.innerHTML += `<p>• ${task.name}</p>`);
+                else list.innerHTML = '<p>Brak ważnych zadań.</p>';
             },
-            
             renderUrgentItems() {
                 const paymentsContainer = document.getElementById('urgent-payments');
                 const appointmentsContainer = document.getElementById('upcoming-appointments');
+                paymentsContainer.innerHTML = '<p>Brak.</p>';
+                appointmentsContainer.innerHTML = '<p>Brak.</p>';
                 const today = new Date(); today.setHours(0, 0, 0, 0);
                 const twoDaysFromNow = new Date(today); twoDaysFromNow.setDate(today.getDate() + 2);
-                
                 const urgentPayments = app.state.payments.filter(p => {
                     const paymentDate = new Date(p.date);
                     return p.status !== 'paid' && paymentDate >= today && paymentDate <= twoDaysFromNow;
                 });
-                
                 if (urgentPayments.length > 0) {
                     paymentsContainer.innerHTML = '';
                     urgentPayments.forEach(p => paymentsContainer.innerHTML += `<p>${p.name} - ${p.amount} zł</p>`);
-                } else {
-                    paymentsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎉</div>Brak pilnych płatności.</div>`;
                 }
-                
                 const upcomingAppointments = app.state.health.filter(h => {
                     if (!h.appointment) return false;
                     const appointmentDate = new Date(h.date);
                     return appointmentDate >= today && appointmentDate <= twoDaysFromNow;
                 });
-                
                 if (upcomingAppointments.length > 0) {
                     appointmentsContainer.innerHTML = '';
                     upcomingAppointments.forEach(h => {
                         const personLabel = `<span class="person-label person-${h.person || 'Karolina'}">${h.person || 'Brak'}</span>`;
                         appointmentsContainer.innerHTML += `<p>${personLabel} ${h.appointment} - ${h.date}</p>`;
                     });
-                } else {
-                    appointmentsContainer.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👍</div>Brak nadchodzących wizyt.</div>`;
                 }
             },
             renderWins() {
                 const list = document.getElementById('wins-list');
+                list.innerHTML = '<li>Doceniaj małe sukcesy!</li>';
                 const todayKey = new Date().toISOString().slice(0, 10);
                 const todaysWins = app.state.wins[todayKey] || [];
                 if (todaysWins.length > 0) {
                     list.innerHTML = '';
                     todaysWins.forEach(win => list.innerHTML += `<li>${win}</li>`);
-                } else {
-                     list.innerHTML = `<div class="empty-state">Każdy mały sukces się liczy! Zapisz go tutaj.</div>`;
                 }
             },
             addWin(e) {
@@ -1174,8 +1141,6 @@
                 app.saveState();
                 this.renderWins();
                 input.value = '';
-                const newItem = document.getElementById('wins-list').lastChild;
-                if(newItem) newItem.classList.add('new-item-animation');
             }
         };
 
@@ -1186,17 +1151,10 @@
             draggedItem: null,
             render() {
                 document.querySelectorAll('.task-list').forEach(list => list.innerHTML = '');
-                const quadrants = { q1: [], q2: [], q3: [], q4: [] };
-                app.state.tasks.forEach(task => quadrants[`q${task.quadrant}`].push(task));
-
-                for(const key in quadrants) {
-                    const container = document.querySelector(`#${key} .task-list`);
-                    if(quadrants[key].length > 0) {
-                         quadrants[key].forEach(task => container.appendChild(this.createTaskElement(task)));
-                    } else {
-                        container.innerHTML = `<div class="empty-state" style="font-size: 0.8em; padding: 1rem;">Wrzuć tu zadania</div>`;
-                    }
-                }
+                app.state.tasks.forEach(task => {
+                    const taskEl = this.createTaskElement(task);
+                    document.querySelector(`#q${task.quadrant} .task-list`).appendChild(taskEl);
+                });
                 this.setupDragAndDrop();
             },
             createTaskElement(task) {
@@ -1221,12 +1179,11 @@
                         <button class="edit-task">✏️</button>
                     </div>`;
                 div.querySelector('.edit-task').addEventListener('click', (e) => { e.stopPropagation(); this.showEditModal(task.id); });
-                div.querySelector(`#cb-${task.id}`).addEventListener('change', (e) => this.toggleCompleted(task.id, e.target));
+                div.querySelector(`#cb-${task.id}`).addEventListener('change', () => this.toggleCompleted(task.id));
                 return div;
             },
-            toggleCompleted(id, checkbox) {
+            toggleCompleted(id) {
                 const task = app.state.tasks.find(t => t.id === id);
-                const taskElement = checkbox.closest('.task');
                 if(task) {
                     task.completed = !task.completed;
                     if(task.completed) {
@@ -1234,13 +1191,8 @@
                         const todayKey = new Date().toISOString().slice(0, 10);
                         if (!app.state.wins[todayKey]) app.state.wins[todayKey] = [];
                         if(!app.state.wins[todayKey].includes(winText)) app.state.wins[todayKey].push(winText);
-                        taskElement.classList.add('completed');
-                    } else {
-                        taskElement.classList.remove('completed');
                     }
-                    app.saveState(); 
-                    // Opóźnione renderowanie dla animacji
-                    setTimeout(() => { this.render(); pulpit.render(); }, 800);
+                    app.saveState(); this.render(); pulpit.render();
                 }
             },
             showEditModal(id) {
@@ -1275,13 +1227,9 @@
                     const task = app.state.tasks.find(t => t.id === id);
                     Object.assign(task, data);
                 } else {
-                    const newId = `task-${Date.now()}`;
-                    app.state.tasks.push({ id: newId, ...data, completed: false });
+                    app.state.tasks.push({ id: `task-${Date.now()}`, ...data, completed: false });
                 }
                 app.saveState(); this.render(); pulpit.render(); app.hideModal('task-modal');
-                // Animacja
-                const newTaskEl = document.querySelector(`[data-id="task-${id}"]`);
-                if(newTaskEl) newTaskEl.classList.add('new-item-animation');
             },
             handleDelete() {
                 const id = document.getElementById('task-id').value;
@@ -1292,8 +1240,6 @@
                 const task = app.state.tasks.find(t => t.id === id);
                 if (!task || !task.date) return;
                 const startDate = new Date(task.date);
-                const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
-                const toICSFormat = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
                 const icsContent = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT', `SUMMARY:Zadanie: ${task.name}`, `DTSTART;VALUE=DATE:${task.date.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${new Date(startDate.getTime() + 24 * 3600 * 1000).toISOString().slice(0, 10).replace(/-/g, '')}`, 'END:VEVENT', 'END:VCALENDAR'].join('\n');
                 const blob = new Blob([icsContent], { type: 'text/calendar' });
                 const link = document.createElement('a');
@@ -1343,10 +1289,8 @@
         const payments = {
             render() {
                 const list = document.getElementById('payments-list');
-                if(app.state.payments.length === 0) {
-                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💸</div>Dodaj płatności, aby o niczym nie zapomnieć.</div>`;
-                    return;
-                }
+                list.innerHTML = '<p>Brak płatności na liście.</p>';
+                if(app.state.payments.length === 0) return;
                 list.innerHTML = '';
                 const sorted = [...app.state.payments].sort((a,b) => new Date(a.date) - new Date(b.date));
                 sorted.forEach(p => {
@@ -1396,10 +1340,8 @@
         const health = {
              render() {
                 const list = document.getElementById('health-list');
-                if (app.state.health.length === 0) {
-                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">❤️</div>Dbaj o zdrowie swoje i rodziny, dodając tu wpisy.</div>`;
-                    return;
-                }
+                list.innerHTML = '<p>Brak wpisów.</p>';
+                if (app.state.health.length === 0) return;
                 list.innerHTML = '';
                 
                 const today = new Date(); today.setHours(0,0,0,0);
@@ -1479,10 +1421,8 @@
         const ideas = {
             render() {
                 const list = document.getElementById('ideas-list');
-                if(app.state.ideas.length === 0) {
-                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💡</div>Głowa pusta? Czas na kawę! Zapisz tu swoje olśnienia.</div>`;
-                    return;
-                }
+                list.innerHTML = '<p>Głowa pusta? Czas na kawę!</p>';
+                if(app.state.ideas.length === 0) return;
                 list.innerHTML = '';
                 app.state.ideas.forEach(idea => {
                     const item = document.createElement('div');
@@ -1515,15 +1455,13 @@
         };
 
         // =================================================================================
-        // == Komponent: CELE (dawniej Rozwój) ==
+        // == Komponent: CELE (ZMIANA: Sugestie AI) ==
         // =================================================================================
         const growth = {
             render() {
                 const list = document.getElementById('goals-list');
-                 if (app.state.goals.length === 0) {
-                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🌱</div>Zdefiniuj swoje cele, aby śledzić postępy.</div>`;
-                    return;
-                }
+                list.innerHTML = '<p>Brak zdefiniowanych celów. Czas zacząć!</p>';
+                if (app.state.goals.length === 0) return;
                 list.innerHTML = '';
                 app.state.goals.forEach(goal => {
                     const completedSteps = goal.steps.filter(s => s.completed).length;
@@ -1534,7 +1472,7 @@
                            <input type="checkbox" id="gs-${goal.id}-${index}" ${step.completed ? 'checked' : ''} onchange="growth.toggleStep('${goal.id}', ${index})">
                            <label for="gs-${goal.id}-${index}">${step.text}</label>
                         </div>`).join('');
-                    item.innerHTML = `<h4>${goal.name} <button onclick="growth.showGoalModal('${goal.id}')">✏️</button></h4><progress value="${progress}" max="100"></progress><div>${stepsHTML}</div>`;
+                    item.innerHTML = `<h4><span>${goal.name}</span> <div><button onclick="growth.getAISuggestions('${goal.id}')" title="Zaproponuj kroki z AI">🤖</button><button onclick="growth.showGoalModal('${goal.id}')">✏️</button></div></h4><progress value="${progress}" max="100"></progress><div>${stepsHTML}</div>`;
                     list.appendChild(item);
                 });
             },
@@ -1573,38 +1511,66 @@
             toggleStep(goalId, stepIndex) {
                 const goal = app.state.goals.find(g => g.id === goalId);
                 if (goal) { goal.steps[stepIndex].completed = !goal.steps[stepIndex].completed; app.saveState(); this.render(); }
+            },
+            // ZMIANA: Funkcja symulująca sugestie AI
+            getAISuggestions(goalId) {
+                const goal = app.state.goals.find(g => g.id === goalId);
+                if (!goal) return;
+
+                const suggestions = {
+                    'sprzedaż|sklep|marketing': ["Analiza konkurencji", "Zaplanuj post promocyjny", "Zbierz opinie od 3 klientów", "Zoptymalizuj SEO dla jednego produktu"],
+                    'nauka|kurs|rozwój|ux|ui|ai': ["Poświęć 30 minut na jeden moduł kursu", "Zrób szczegółowe notatki", "Wykonaj ćwiczenie praktyczne", "Napisz podsumowanie tego, czego się nauczyłaś"],
+                    'zdrowie|forma|dieta': ["Zaplanuj posiłki na 3 dni", "Wykonaj 20-minutowy trening", "Idź na 30-minutowy spacer", "Pij 1.5l wody"],
+                    'default': ["Podziel cel na 3 mniejsze kroki", "Określ pierwszy, najprostszy krok", "Znajdź zasoby potrzebne do realizacji celu"]
+                };
+
+                let suggestedSteps = suggestions.default;
+                for (const key in suggestions) {
+                    if (new RegExp(key, 'i').test(goal.name)) {
+                        suggestedSteps = suggestions[key];
+                        break;
+                    }
+                }
+
+                const newStepsText = suggestedSteps.join('\n');
+                const currentSteps = document.getElementById('goal-steps-input').value;
+                if (confirm(`AI proponuje następujące kroki dla celu "${goal.name}":\n\n${newStepsText}\n\nCzy chcesz je dodać do istniejącej listy kroków?`)) {
+                    this.showGoalModal(goal.id);
+                    const textarea = document.getElementById('goal-steps-input');
+                    textarea.value = (textarea.value.trim() === '' ? '' : textarea.value + '\n') + newStepsText;
+                }
             }
         };
 
         // =================================================================================
-        // == Pozostałe komponenty (Posiłki, Nawyki, Notatnik, Focus, Review)
+        // == Pozostałe komponenty
         // =================================================================================
         const meals = {
-            days: ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'],
-            mealIdeas: { breakfast: ['Owsianka', 'Jajecznica', 'Kanapki z awokado'], lunch: ['Kurczak z ryżem', 'Zupa pomidorowa', 'Sałatka grecka'], dinner: ['Zapiekanka', 'Lekka sałatka', 'Wrapy z kurczakiem'] },
-            shoppingCategories: { 'Nabiał': ['mleko', 'ser', 'jajka', 'jogurt', 'masło', 'twaróg'], 'Warzywa': ['pomidor', 'ogórek', 'cebula', 'sałata', 'ziemniaki', 'marchew'], 'Owoce': ['banan', 'jabłko', 'cytryna', 'pomarańcza'], 'Mięso': ['kurczak', 'szynka', 'boczek', 'indyk'], 'Pieczywo': ['chleb', 'bułki'], 'Produkty sypkie': ['ryż', 'makaron', 'kasza', 'mąka', 'cukier'] },
+            mealIdeas: { 
+                breakfast: ['Owsianka z owocami i orzechami', 'Jajecznica na boczku ze szczypiorkiem', 'Kanapki z awokado, pomidorem i rukolą', 'Jogurt naturalny z granolą i miodem', 'Twarożek z rzodkiewką i ogórkiem', 'Smoothie bananowo-szpinakowe', 'Naleśniki z serem'], 
+                lunch: ['Pierś z kurczaka z ryżem i brokułami', 'Zupa pomidorowa z makaronem', 'Sałatka grecka z grzankami', 'Makaron z pesto i kurczakiem', 'Leczo warzywne', 'Ryba na parze z ziemniakami i koperkiem', 'Zupa krem z dyni'], 
+                dinner: ['Zapiekanka makaronowa z mięsem mielonym', 'Lekka sałatka z tuńczykiem', 'Wrapy z kurczakiem i warzywami', 'Omlet z szynką i serem', 'Kanapki na ciepło z pieczarkami', 'Sałatka z wędzonym łososiem', 'Krem z białych warzyw'] 
+            },
+            shoppingCategories: { 'Nabiał': ['mleko', 'ser', 'jajka', 'jogurt', 'masło', 'twaróg'], 'Warzywa': ['pomidor', 'ogórek', 'cebula', 'sałata', 'ziemniaki', 'marchew', 'brokuł', 'szpinak', 'papryka', 'dynia'], 'Owoce': ['banan', 'jabłko', 'cytryna', 'pomarańcza', 'awokado'], 'Mięso i Ryby': ['kurczak', 'szynka', 'boczek', 'indyk', 'mięso mielone', 'łosoś', 'tuńczyk'], 'Pieczywo': ['chleb', 'bułki', 'tortilla'], 'Produkty sypkie': ['ryż', 'makaron', 'kasza', 'mąka', 'cukier', 'granola'] },
             render() {
-                const grid = document.getElementById('meals-grid'); grid.innerHTML = '';
-                this.days.forEach(day => {
-                    const dayKey = day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    grid.innerHTML += `<div class="meal-day-card"><h4>${day}</h4><input data-day="${dayKey}" data-meal="breakfast" placeholder="Śniadanie" value="${app.state.meals[dayKey]?.breakfast || ''}"><input data-day="${dayKey}" data-meal="lunch" placeholder="Obiad" value="${app.state.meals[dayKey]?.lunch || ''}"><input data-day="${dayKey}" data-meal="dinner" placeholder="Kolacja" value="${app.state.meals[dayKey]?.dinner || ''}"></div>`;
-                });
+                const container = document.getElementById('daily-meal-ideas');
+                const today = new Date().toDateString();
+                let dailyMeals = JSON.parse(localStorage.getItem('dailyMeals'));
+                if (!dailyMeals || dailyMeals.date !== today) {
+                    dailyMeals = {
+                        date: today,
+                        breakfast: pulpit.getRandomItem(this.mealIdeas.breakfast),
+                        lunch: pulpit.getRandomItem(this.mealIdeas.lunch),
+                        dinner: pulpit.getRandomItem(this.mealIdeas.dinner)
+                    };
+                    localStorage.setItem('dailyMeals', JSON.stringify(dailyMeals));
+                }
+                 container.innerHTML = `
+                    <p><strong>Śniadanie:</strong> ${dailyMeals.breakfast}</p>
+                    <p><strong>Obiad:</strong> ${dailyMeals.lunch}</p>
+                    <p><strong>Kolacja:</strong> ${dailyMeals.dinner}</p>
+                `;
                 document.getElementById('shopping-list').value = app.state.meals.shoppingList || '';
-                grid.querySelectorAll('input').forEach(input => input.addEventListener('change', (e) => this.saveMeal(e.target)));
-            },
-            generate() {
-                this.days.forEach(day => {
-                    const dayKey = day.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    if (!app.state.meals[dayKey]) app.state.meals[dayKey] = {};
-                    app.state.meals[dayKey].breakfast = pulpit.getRandomItem(this.mealIdeas.breakfast);
-                    app.state.meals[dayKey].lunch = pulpit.getRandomItem(this.mealIdeas.lunch);
-                    app.state.meals[dayKey].dinner = pulpit.getRandomItem(this.mealIdeas.dinner);
-                });
-                app.saveState(); this.render(); app.showAlert("Gotowe!", "Jadłospis na tydzień został wygenerowany.");
-            },
-            saveMeal(input) {
-                const { day, meal } = input.dataset; if (!app.state.meals[day]) app.state.meals[day] = {};
-                app.state.meals[day][meal] = input.value; app.saveState();
             },
             saveShoppingList(value) { app.state.meals.shoppingList = value; app.saveState(); },
             groupShoppingList() {
@@ -1626,77 +1592,112 @@
                 }
             }
         };
-        const habits = {
-             render() {
-                const list = document.getElementById('habits-list');
-                if (app.state.habits.length === 0) {
-                    list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💪</div>Zacznij od jednego małego nawyku.</div>`;
-                    return;
-                }
-                list.innerHTML = ''; 
+        const checklist = {
+            render() {
                 const todayKey = new Date().toISOString().slice(0, 10);
-                app.state.habits.forEach(habit => {
-                    const isCompleted = habit.completed && habit.completed[todayKey];
-                    const streak = this.calculateStreak(habit.id);
-                    const streakHTML = streak > 1 ? `<span class="habit-streak">🔥 ${streak} dni</span>` : '';
-                    
-                    const item = document.createElement('div');
-                    item.className = 'habit-item';
-                    item.innerHTML = `<label for="habit-${habit.id}">${habit.name}</label> ${streakHTML} <input type="checkbox" id="habit-${habit.id}" data-id="${habit.id}" ${isCompleted ? 'checked' : ''}>`;
-                    item.querySelector('input').addEventListener('change', (e) => this.toggleComplete(e.target.dataset.id));
-                    list.appendChild(item);
+                if (app.state.checklist.date !== todayKey) {
+                    app.state.checklist = { date: todayKey, items: [] };
+                    app.saveState();
+                }
+
+                const list = document.getElementById('checklist-list');
+                list.innerHTML = '';
+                if(app.state.checklist.items.length === 0) {
+                     list.innerHTML = '<p>Brak zadań na dzisiejszej checkliście.</p>';
+                     return;
+                }
+                
+                app.state.checklist.items.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'checklist-item' + (item.completed ? ' completed' : '');
+                    div.innerHTML = `
+                        <input type="checkbox" id="check-${index}" ${item.completed ? 'checked' : ''}>
+                        <label for="check-${index}">${item.text}</label>
+                    `;
+                    div.querySelector('input').addEventListener('change', () => this.toggleComplete(index));
+                    list.appendChild(div);
                 });
             },
-            calculateStreak(habitId) {
-                const habit = app.state.habits.find(h => h.id === habitId);
-                if (!habit || !habit.completed) return 0;
-                
-                let streak = 0;
-                let date = new Date();
-                
-                while (true) {
-                    const dateKey = date.toISOString().slice(0, 10);
-                    if (habit.completed[dateKey]) {
-                        streak++;
-                        date.setDate(date.getDate() - 1);
-                    } else {
-                        break;
-                    }
+            addItem(e) {
+                e.preventDefault();
+                const input = document.getElementById('checklist-input');
+                const text = input.value.trim();
+                if (text) {
+                    app.state.checklist.items.push({ text, completed: false });
+                    app.saveState();
+                    this.render();
+                    input.value = '';
                 }
-                return streak;
             },
-            showEditModal() { document.getElementById('habit-form').reset(); app.showModal('habit-modal'); },
-            handleSubmit(e) {
-                e.preventDefault(); const name = document.getElementById('habit-name').value.trim();
-                if (name) app.state.habits.push({ id: `habit-${Date.now()}`, name, completed: {} });
-                app.saveState(); this.render(); app.hideModal('habit-modal');
-            },
-            handleDelete() { /* Do implementacji */ },
-            toggleComplete(id) {
-                const habit = app.state.habits.find(h => h.id === id); if (!habit) return;
-                const todayKey = new Date().toISOString().slice(0, 10);
-                if (!habit.completed) habit.completed = {};
-                habit.completed[todayKey] = !habit.completed[todayKey];
+            toggleComplete(index) {
+                app.state.checklist.items[index].completed = !app.state.checklist.items[index].completed;
                 app.saveState();
-                this.render(); // Re-render to update streak
+                this.render();
             }
         };
+        // ZMIANA: Rozbudowany Notatnik AI
         const notebook = {
             render() { document.getElementById('notebook-area').value = app.state.notebook || ''; },
             save() { app.state.notebook = document.getElementById('notebook-area').value; app.saveState(); },
             sort() {
-                const text = app.state.notebook; const lines = text.split('\n').filter(l => l.trim() !== '');
-                const sorted = { tasks: [], ideas: [] };
+                const text = app.state.notebook; 
+                const lines = text.split('\n').filter(l => l.trim() !== '');
+                if (lines.length === 0) return app.showAlert("Pusty notatnik", "Nie ma nic do posortowania. Wpisz coś najpierw!");
+
+                const patterns = {
+                    task: /zrobić|zadanie|zapłacić|umówić|wysłać/i,
+                    shopping: /kupić|lista zakupów|na zakupy/i,
+                    health: /wizyta|lekarz|badanie|recepta|zdrowie/i
+                };
+
+                const getRelativeDate = (line) => {
+                    const d = new Date();
+                    if (/jutro/i.test(line)) d.setDate(d.getDate() + 1);
+                    if (/pojutrze/i.test(line)) d.setDate(d.getDate() + 2);
+                    if (/poniedziałek|pon/i.test(line)) d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
+                    if (/wtorek|wt/i.test(line)) d.setDate(d.getDate() + (2 + 7 - d.getDay()) % 7);
+                    if (/środ[aę]|śr/i.test(line)) d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7);
+                    if (/czwartek|czw/i.test(line)) d.setDate(d.getDate() + (4 + 7 - d.getDay()) % 7);
+                    if (/piątek|pt/i.test(line)) d.setDate(d.getDate() + (5 + 7 - d.getDay()) % 7);
+                    const timeMatch = line.match(/(\d{1,2}):(\d{2})/);
+                    return { date: d.toISOString().slice(0, 10), time: timeMatch ? timeMatch[0] : '' };
+                };
+
+                const sorted = { tasks: [], ideas: [], health: [], shopping: [] };
                 lines.forEach(line => {
-                    if (/kupić|zrobić|zadanie|zapłacić|umówić|wysłać/i.test(line)) sorted.tasks.push(line);
+                    if (patterns.health.test(line)) sorted.health.push(line);
+                    else if (patterns.shopping.test(line)) sorted.shopping.push(line.replace(patterns.shopping, '').trim());
+                    else if (patterns.task.test(line)) sorted.tasks.push(line);
                     else sorted.ideas.push(line);
                 });
-                if(confirm(`Znaleziono ${sorted.tasks.length} potencjalnych zadań i ${sorted.ideas.length} pomysłów. Czy chcesz je dodać do odpowiednich sekcji i wyczyścić notatnik?`)) {
-                    sorted.tasks.forEach(name => app.state.tasks.push({ id: `task-${Date.now()}`, name, quadrant: 4, completed: false }));
+
+                let summary = `Asystent AI znalazł:\n`;
+                if(sorted.tasks.length > 0) summary += `\n- ${sorted.tasks.length} potencjalnych zadań`;
+                if(sorted.health.length > 0) summary += `\n- ${sorted.health.length} wpisów zdrowotnych`;
+                if(sorted.shopping.length > 0) summary += `\n- ${sorted.shopping.length} produktów na listę zakupów`;
+                if(sorted.ideas.length > 0) summary += `\n- ${sorted.ideas.length} pomysłów`;
+
+                if(confirm(`${summary}\n\nCzy chcesz dodać je do odpowiednich sekcji i wyczyścić notatnik?`)) {
+                    sorted.tasks.forEach(name => {
+                        const { date } = getRelativeDate(name);
+                        app.state.tasks.push({ id: `task-${Date.now()}`, name, date, quadrant: 4, completed: false });
+                    });
                     sorted.ideas.forEach(text => app.state.ideas.push({ id: `idea-${Date.now()}`, text }));
+                    sorted.health.forEach(line => {
+                        const { date, time } = getRelativeDate(line);
+                        const personMatch = line.match(/dla (Zosi|Tymka|Karoliny|Tomka)|(Zosi|Tymka|Karoliny|Tomka)/i);
+                        const person = personMatch ? (personMatch[1] || personMatch[2]) : 'Karolina';
+                        const appointment = line.replace(/u lekarza/i, '').trim();
+                        app.state.health.push({ id: `health-${Date.now()}`, date, time, mood: 3, person, appointment, notes: '' });
+                    });
+                    if(sorted.shopping.length > 0) {
+                        const currentList = app.state.meals.shoppingList.trim();
+                        app.state.meals.shoppingList = (currentList === '' ? '' : currentList + '\n') + sorted.shopping.join('\n');
+                    }
+                    
                     app.state.notebook = '';
                     app.saveState(); app.renderAll();
-                    app.showAlert("Gotowe!", "Notatki zostały posortowane.");
+                    app.showAlert("Gotowe!", "Notatki zostały inteligentnie posortowane.");
                 }
             }
         };
@@ -1732,14 +1733,9 @@
                 const today = new Date(); const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
                 let winsCount = 0;
                 for(const dateKey in app.state.wins) { const date = new Date(dateKey); if(date >= lastWeek && date <= today) winsCount += app.state.wins[dateKey].length; }
-                let habitsCompleted = 0, habitsTotal = 0;
-                app.state.habits.forEach(habit => {
-                     for(const dateKey in habit.completed) { const date = new Date(dateKey); if(date >= lastWeek && date <= today) { habitsTotal++; if(habit.completed[dateKey]) habitsCompleted++; } }
-                });
-                const habitSuccessRate = habitsTotal > 0 ? ((habitsCompleted / habitsTotal) * 100).toFixed(0) : 0;
                 const tasksCompleted = app.state.tasks.filter(t => t.completed && new Date(t.id.split('-')[1]) >= lastWeek).length;
                 const tasksTotal = app.state.tasks.filter(t => new Date(t.id.split('-')[1]) >= lastWeek).length;
-                content.innerHTML = `<h4>Twoje postępy w ostatnim tygodniu:</h4><p>🏆 Odnotowałaś <strong>${winsCount}</strong> zwycięstw. Brawo!</p><p>✅ Ukończyłaś <strong>${tasksCompleted}</strong> z ${tasksTotal} zadań.</p><p>💪 Realizacja nawyków na poziomie <strong>${habitSuccessRate}%</strong>.</p><hr><h4>Refleksja:</h4><p>Co poszło dobrze? Co można poprawić w nadchodzącym tygodniu?</p>`;
+                content.innerHTML = `<h4>Twoje postępy w ostatnim tygodniu:</h4><p>🏆 Odnotowałaś <strong>${winsCount}</strong> zwycięstw. Brawo!</p><p>✅ Ukończyłaś <strong>${tasksCompleted}</strong> z ${tasksTotal > 0 ? tasksTotal : tasksCompleted} zadań.</p><hr><h4>Refleksja:</h4><p>Co poszło dobrze? Co można poprawić w nadchodzącym tygodniu?</p>`;
                 app.showModal('weekly-review-modal');
             }
         };
